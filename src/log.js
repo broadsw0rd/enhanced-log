@@ -1,6 +1,9 @@
 ;(function (global, Object, prototype, __proto__){
 
+    // =====================================
     // Private interface
+    // =====================================
+
     function extend(target, source){
         for(var prop in source){
             target[prop] = source[prop]
@@ -9,20 +12,39 @@
     }
 
     function createStyles(styles){
-        return Object.keys(styles).reduce(function(acc, style){
+        return Object.keys(styles).reduce(function (acc, style){
             return acc.push([style, styles[style]].join(':')), acc
-        }, []).join(';')
+        }, []).join(';') + ';'
+    }
+
+    function parseStyles(styles){
+        return styles.replace(/;$/, '').split(';').reduce(function (acc, style){
+            return acc[style = style.split(':'), style[0]] = style[1], acc
+        }, {})
     }
 
     var enabled = true
 
+    // =====================================
     // Constructor
+    // =====================================
+
     function Logger(styles){
         styles = styles || {}
 
-        function log(message){
+        // Polymorph log function
+        function log(message){ 
             'use strict';
-            enabled && (this && this.log ? this : console).log('%c' + message, createStyles(log.styles))
+            if(!this || this == global){ // Phantomjs behaves strangely: even with 'use strict'; `this` refer to `window`
+                enabled && console.log('%c' + message, createStyles(log.styles))
+            }
+            else if(this instanceof log){
+                return Logger(extend(extend({}, log.styles), typeof styles == 'string' ? parseStyles(styles) : styles))
+            }
+            else {
+                this.log('%c' + message, createStyles(log.styles))
+            }
+            
         }
 
         log[__proto__] = LogProto
@@ -32,7 +54,12 @@
         return log
     }
 
+    // =====================================
     // Public interface
+    // =====================================
+
+    var LogProto = Logger[prototype]
+
     function mixin(styles){
         var source = {}
         for(var style in styles){
@@ -69,12 +96,11 @@
         ,   italic: { 'font-style': 'italic' }
         }
 
-    var LogProto = Logger[prototype]
-
     extend(LogProto, {
         defaults: defaults
     ,   mixin: mixin
     ,   toString: function (){ return createStyles(this.styles) }
+    ,   toJSON: function (){ return this.styles }
     ,   on: function (){ enabled = true }
     ,   off: function (){ enabled = false }
     ,   toggle: function (enable){ enabled = enable !== void 0 ? enable : !enabled }
@@ -84,12 +110,17 @@
 
     mixin(defaults)
 
+    // =====================================
     // Export
-    if ('function' === typeof define  && define.amd) {
+    // =====================================
+
+    if (typeof define == 'function' && define.amd) {
         define(function() { return Logger() })
-    } else if ('undefined' !== typeof module && module.exports) {
+    } 
+    else if (typeof module != 'undefined' && module.exports) {
         module.exports = Logger()
-    } else {
+    } 
+    else {
         global.log = Logger()
     }
 }(window, Object, 'prototype', '__proto__'))
