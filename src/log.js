@@ -1,4 +1,6 @@
-;(function (global, Object){
+;(function (global, Object, prototype, __proto__){
+
+    // Private interface
     function extend(target, source){
         for(var prop in source){
             target[prop] = source[prop]
@@ -13,7 +15,8 @@
     }
 
     var enabled = true
-    
+
+    // Constructor
     function Logger(styles){
         styles = styles || {}
 
@@ -22,13 +25,14 @@
             enabled && (this && this.log ? this : console).log('%c' + message, createStyles(log.styles))
         }
 
-        log.__proto__ = LogProto
+        log[__proto__] = LogProto
 
         log.styles = styles
 
         return log
     }
 
+    // Public interface
     function mixin(styles){
         var source = {}
         for(var style in styles){
@@ -65,7 +69,7 @@
         ,   italic: { 'font-style': 'italic' }
         }
 
-    var LogProto = Logger.prototype
+    var LogProto = Logger[prototype]
 
     extend(LogProto, {
         defaults: defaults
@@ -76,17 +80,16 @@
     ,   toggle: function (enable){ enabled = enable !== void 0 ? enable : !enabled }
     })
 
-    LogProto.__proto__ = Function.prototype
+    LogProto[__proto__] = Function[prototype]
 
     mixin(defaults)
 
+    // Export
     if ('function' === typeof define  && define.amd) {
         define(function() { return Logger() })
-    } 
-    else if ('undefined' !== typeof module && module.exports) {
+    } else if ('undefined' !== typeof module && module.exports) {
         module.exports = Logger()
-    } 
-    else {
+    } else {
         global.log = Logger()
     }
-}(window, Object))
+}(window, Object, 'prototype', '__proto__'))
