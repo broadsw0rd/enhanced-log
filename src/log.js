@@ -1,10 +1,7 @@
-;(function (global, console){
+;(function (global, Object){
     function extend(target, source){
-        for(var i = 1; i < arguments.length; i++){
-            source = arguments[i]
-            for(var prop in source){
-                target[prop] = source[prop]
-            }
+        for(var prop in source){
+            target[prop] = source[prop]
         }
         return target
     }
@@ -38,7 +35,7 @@
             !function (name, value){
                 source[name] = {
                     get: function(){
-                        return Logger(extend({}, this.styles, value))
+                        return Logger(extend(extend({}, this.styles), value))
                     }
                 }
             }(style, styles[style])
@@ -76,7 +73,7 @@
     ,   toString: function (){ return createStyles(this.styles) }
     ,   on: function (){ enabled = true }
     ,   off: function (){ enabled = false }
-    ,   toggle: function (enable){ enable !== void 0 ? enabled = enable : enabled = !enabled }
+    ,   toggle: function (enable){ enabled = enable !== void 0 ? enable : !enabled }
     })
 
     LogProto.__proto__ = Function.prototype
@@ -92,4 +89,4 @@
     else {
         global.log = Logger()
     }
-}(window, console))
+}(window, Object))
