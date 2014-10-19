@@ -4,7 +4,7 @@ describe('Test Log', function(){
         for(var style in styles){
             result.push([style, styles[style]].join(':'))
         }
-        return result.join(';')
+        return result.join(';') + ';'
     }
 
     it('`log` should be defined', function(){
@@ -21,11 +21,14 @@ describe('Test Log', function(){
     })
 
     it('`log` should log the message if called like a function', function(){
+        var flag = 0
         console.log = function(message, style){
-            expect(message).toBeDefined()
+            flag = 1
+            expect(message).toEqual('%cmessage')
             expect(style).toBeDefined()
         }
         log('message')
+        expect(flag).toEqual(1)
         delete console.log
     })
 
@@ -50,4 +53,70 @@ describe('Test Log', function(){
             expect(log[method].toString()).toEqual(createStyles(log[method].styles))
         })
     }
+
+    it('`log#off` should disabling logging', function(){
+        console.log = function(message, style){
+            throw Error()
+        }
+        log.off()
+        expect(log).not.toThrow()
+        delete console.log
+    })
+
+    it('`log#on` should enabling logging', function(){
+        console.log = function(message, style){
+            throw Error()
+        }
+        log.off()
+        expect(log).not.toThrow()
+        delete console.log
+        log.on()
+        var flag = 0
+        console.log = function(message, style){
+            flag = 1
+            expect(message).toEqual('%cmessage')
+            expect(style).toBeDefined()
+        }
+        log('message')
+        expect(flag).toEqual(1)
+        delete console.log
+    })
+
+    it('`log#toggle` should toggle logging', function(){
+        console.log = function(message, style){
+            throw Error()
+        }
+        log.toggle()
+        expect(log).not.toThrow()
+        delete console.log
+        log.toggle()
+        var flag = 0
+        console.log = function(message, style){
+            flag = 1
+            expect(message).toEqual('%cmessage')
+            expect(style).toBeDefined()
+        }
+        log('message')
+        expect(flag).toEqual(1)
+        delete console.log
+    })
+
+    it('`log#toggle` should on or off logging depending on passed argument', function(){        
+        log.toggle(true)
+        var flag = 0
+        console.log = function(message, style){
+            flag = 1
+            expect(message).toEqual('%cmessage')
+            expect(style).toBeDefined()
+        }
+        log('message')
+        expect(flag).toEqual(1)
+        delete console.log
+        console.log = function(message, style){
+            throw Error()
+        }
+        log.toggle(false)
+        expect(log).not.toThrow()
+        delete console.log
+    })
 })
