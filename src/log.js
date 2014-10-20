@@ -35,11 +35,11 @@
         // Polymorph log function
         function log(message){ 
             'use strict';
-            if(!this || this == global){ // Phantomjs behaves strangely: even with 'use strict'; `this` refer to `window`
+            if(!this || this instanceof Logger || this == global){ // Phantomjs behaves strangely: even with 'use strict'; `this` refer to `window`
                 enabled && console.log('%c' + message, createStyles(log.styles))
             }
             else if(this instanceof log){
-                return Logger(extend(extend({}, log.styles), typeof styles == 'string' ? parseStyles(styles) : styles))
+                return Logger(extend(extend({}, log.styles), typeof message == 'string' ? parseStyles(message) : message))
             }
             else {
                 this.log('%c' + message, createStyles(log.styles))
