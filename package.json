@@ -1,7 +1,28 @@
 {
-    "name": "Log",
-    "version": "0.1.0",
-    "dependencies": {
+    "name": "beauty-log",
+    "version": "1.0.0",
+    "description": "Make your console.log more sexy",
+    "keywords": [
+        "log",
+        "console.log",
+        "sexy"
+    ],
+    "license": "MIT",
+    "bugs": { 
+        "url": "",
+        "email": "broadsw.rd@yandex.ru"
+    },
+    "author": {
+        "name": "Vladimir Bykov",
+        "email": "broadsw.rd@yandex.ru",
+        "url": "https://github.com/broadsw0rd"
+    },
+    "main": "dist/log.min.js",
+    "repository" :{ 
+        "type" : "git", 
+        "url" : ""
+    },
+    "devDependencies": {
         "grunt": "~0.4.5",
         "load-grunt-tasks": "0.6.0",
         "grunt-contrib-uglify": "~0.6.0",
