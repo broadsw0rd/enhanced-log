@@ -34,6 +34,91 @@
       <p class="text-center">Make your <code>console.log</code> more sexy</p>
       <hr>
     </header>
+    <div class="demo">
+      <img src="images/demo.png" class="img-responsive img-thumbnail"></img>
+    </div>
+    <div class="page-header">
+      <h2>Why?</h2>
+    </div>
+    <p>How often you doing things such this when debug your code?</p>
+    <pre><code class="language-javascript">console.log('================================')
+console.log(super.iportant.debug.info)
+console.log('================================')</code></pre>
+    <p>Now you have very clever way to avoid this with <code>beauty-log</code></p>
+    <div class="page-header">
+      <h2>About</h2>
+    </div>
+    <p><code>beauty-log</code> have several methods which very similar to CSS classes and you can combine them as you like. Just open your Dev Tools to see it in action</p>
+    <table class="table table-bordered ">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>log#large</code></td>
+          <td><span class="log-large">message</span></td>
+        </tr>
+        <tr>
+          <td><code>log#huge</code></td>
+          <td><span class="log-huge">message</span></td>
+        </tr>
+        <tr>
+          <td><code>log#small</code></td>
+          <td><span class="log-small">message</span></td>
+        </tr>
+        <tr>
+          <td><code>log#info</code></td>
+          <td><span class="log-info">message</span></td>
+        </tr>
+        <tr>
+          <td><code>log#success</code></td>
+          <td><span class="log-success">message</span></td>
+        </tr>
+        <tr>
+          <td><code>log#warning</code></td>
+          <td><span class="log-warning">message</span></td>
+        </tr>
+        <tr>
+          <td><code>log#danger</code></td>
+          <td><span class="log-danger">message</span></td>
+        </tr>
+        <tr>
+          <td><code>log#underline</code></td>
+          <td><span class="log-underline">message</span></td>
+        </tr>
+        <tr>
+          <td><code>log#overline</code></td>
+          <td><span class="log-overline">message</span></td>
+        </tr>
+        <tr>
+          <td><code>log#linethrough</code></td>
+          <td><span class="log-linethrough">message</span></td>
+        </tr>
+        <tr>
+          <td><code>log#capitalize</code></td>
+          <td><span class="log-capitalize">message</span></td>
+        </tr>
+        <tr>
+          <td><code>log#uppercase</code></td>
+          <td><span class="log-uppercase">message</span></td>
+        </tr>
+        <tr>
+          <td><code>log#lowercase</code></td>
+          <td><span class="log-lowercase">message</span></td>
+        </tr>
+        <tr>
+          <td><code>log#bold</code></td>
+          <td><span class="log-bold">message</span></td>
+        </tr>
+        <tr>
+          <td><code>log#italic</code></td>
+          <td><span class="log-italic">message</span></td>
+        </tr>
+      </tbody>
+    </table>
     <div class="page-header">
       <h2>Download <small>ver.1.0.0</small></h2>
     </div>
@@ -44,21 +129,23 @@
     </div>
     <div class="row">
       <div class="col-md-6">
+        <p>via Bower</p>
         <pre><code class="language-bash">$ bower install beauty-log</code></pre>
         <pre><code class="language-markup">&lt;script src="bower_components/beauty-log/dist/log.min.js"&gt;&lt;/script&gt;</code></pre>
       </div>
       <div class="col-md-6">
+        <p>via npm</p>
         <pre><code class="language-bash">$ npm install beauty-log</code></pre>
         <pre><code class="language-javascript">var log = require('beauty-log')</code></pre>
       </div>
       <div class="col-md-12">
-        <p class="lead">And now you have full power of <code>log</code> function</p>
+        <p>And now you have full power of <code>log</code> function</p>
       </div>
     </div>
     <div class="page-header">
       <h2>Support</h2>
     </div>
-    <p class="lead">Every browser which support <a href="https://developer.chrome.com/devtools/docs/console#styling-console-output-with-css" targer="_blank">styling console output with CSS</a></p>
+    <p>Every browser which support <a href="https://developer.chrome.com/devtools/docs/console#styling-console-output-with-css" targer="_blank">styling console output with CSS</a></p>
   </div>
   
   <footer class="well well-sm">
@@ -66,5 +153,12 @@
   </footer>
   <script type="text/javascript" src="libs/prism.js"></script>
   <script type="text/javascript" src="src/log.js"></script>
+  <script>
+    log('simple message')
+    log.success.large.capitalize('debug:start')
+    log.danger.huge.uppercase('something bad happened')
+    log.info.large.underline('No! it`s OK')
+    log.large.bold('debug:complete')
+  </script>
   </body>
 </html>
