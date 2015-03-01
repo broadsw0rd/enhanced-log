@@ -23,11 +23,23 @@
         "url" : ""
     },
     "devDependencies": {
-        "grunt": "~0.4.5",
-        "load-grunt-tasks": "0.6.0",
-        "grunt-contrib-uglify": "~0.6.0",
-        "grunt-contrib-jasmine": "~0.8.0",
-        "grunt-contrib-jshint": "~0.10.0",
-        "jshint-stylish": "~1.0.0"
+        "browserify"    : "latest",
+        "uglify-js"     : "latest",
+        "mocha"         : "latest",
+        "expect.js"     : "latest",
+        "jshint"        : "latest",
+        "jshint-stylish": "latest"
+    },
+    "jshintConfig": {
+        "asi": true,
+        "laxcomma": true,
+        "laxbreak": true,
+        "shadow": true
+    },
+    "scripts": {
+        "build": "uglifyjs -c -m -- src/log.js > dist/log.min.js",
+        "lint" : "jshint --reporter node_modules/jshint-stylish/stylish.js src/log.js",
+        "test" : "mocha tests/tests.js",
+        "test-browser": "browserify tests/tests.js -o tests/tests-browser.js"
     }
 }

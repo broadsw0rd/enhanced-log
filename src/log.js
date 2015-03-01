@@ -123,4 +123,4 @@
     else {
         global.log = Logger()
     }
-}(window, Object, 'prototype', '__proto__'))
+}(this, Object, 'prototype', '__proto__'))
