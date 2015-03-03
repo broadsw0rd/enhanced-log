@@ -2852,52 +2852,127 @@ module.exports = isArray || function (val) {
     // Private interface
     // =====================================
 
-    function extend(target, source){
-        for(var prop in source){
-            target[prop] = source[prop]
+    var enabled = true
+
+    function _log(message, logger){
+        enabled && logger.api[logger.method]('%c' + logger.mapper(message), _createStyles(logger.styles))
+    }
+
+    // -------------------------------------
+    // Utils
+    // -------------------------------------
+
+    function _id(arg){
+        return arg
+    }
+
+    function _result(arg){
+        return typeof arg == 'function' ? arg() : arg
+    }
+    
+    function _extend(target, source){
+        for(var i = 1; i < arguments.length; i++){
+            source = arguments[i]
+            for(var prop in source){
+                target[prop] = source[prop]
+            }
         }
         return target
     }
 
-    function createStyles(styles){
-        return Object.keys(styles).reduce(function (acc, style){
-            return acc.push([style, styles[style]].join(':')), acc
-        }, []).join(';') + ';'
+    // {'color': '#C7254E','background-color': '#F9F2F4'} => "color:#C7254E;background-color:#F9F2F4;"
+    function _createStyles(styles){
+        styles = JSON.stringify(styles).replace(/[{}"]/g, '').replace(',', ';')
+        return styles ? styles + ';' : ''
     }
 
-    function parseStyles(styles){
-        return styles.replace(/;$/, '').split(';').reduce(function (acc, style){
-            return acc[style = style.split(':'), style[0]] = style[1], acc
+    // "color:#C7254E;background-color:#F9F2F4;" => {'color': '#C7254E','background-color': '#F9F2F4'}
+    function _parseStyles(styles){
+        return styles.replace(/\s+/g, '').replace(/;$/, '').split(';').reduce(function (acc, style){
+            if(style) acc[style = style.split(':'), style[0]] = style[1]
+            return acc
         }, {})
     }
 
-    var enabled = true
+    // -------------------------------------
+    // Divider
+    // -------------------------------------
+ 
+    var DEFAULT_DIVIDER_LENGTH = 50
+    ,   DEFAULT_DIVIDER_SYMBOL = '='
+ 
+    function _divider(text, symbol, length){
+        length = length || DEFAULT_DIVIDER_LENGTH
+        symbol = symbol || DEFAULT_DIVIDER_SYMBOL
+        if(typeof text == 'number'){
+            length = text
+            text = null
+        }
+        if(/^\W+$/.test(text)){
+            if(typeof symbol == 'number'){
+                length = symbol
+            }
+            symbol = text
+            text = null
+        }
+        if(text){
+            if(typeof symbol == 'number'){
+                length = symbol
+                symbol = DEFAULT_DIVIDER_SYMBOL
+            }
+            if(/\n/.test(text)){
+                return text.replace('\r', '').split('\n').map(function (text){
+                    return _divider(text, symbol, length)
+                }).join('\n')
+            }
+            else {
+                length = Math.ceil((length - (text.length + 2)) / 2)
+                
+                var start = Array(length).join(symbol)
+                ,   end = Array(length).join(symbol)
+ 
+                return [start, text, end].join(' ')                
+            }
+        }
+        else {
+            return Array(length).join(symbol)
+        }
+    }
+
+    // -------------------------------------
+    // Callout
+    // -------------------------------------
+ 
+    var DEFAULT_CALLOUT_SYMBOL = String.fromCharCode(9612)
+ 
+    function _callout(message, symbol){
+        symbol = symbol || DEFAULT_CALLOUT_SYMBOL
+        if(/\n/.test(message)){
+            return [
+                    '\t' + symbol
+                ,   message.replace('\r', '').split('\n').map(function (message){ return '\t' + symbol + ' ' + message }).join('\r\n')
+                ,   '\t' + symbol
+                ].join('\r\n')
+        }
+        else {            
+            return [
+                    '\t' + symbol
+                ,   '\t' + symbol + ' ' + message
+                ,   '\t' + symbol
+                ].join('\r\n')
+        }
+    }
 
     // =====================================
     // Constructor
     // =====================================
 
-    function Logger(styles){
-        styles = styles || {}
-
-        // Polymorph log function
-        function log(message){ 
+    function LogFactory(base){
+        function log(message){
             'use strict';
-            if(!this || this instanceof Logger || this == global){ // Phantomjs behaves strangely: even with 'use strict'; `this` refer to `window`
-                enabled && console.log('%c' + message, createStyles(log.styles))
-            }
-            else if(this instanceof log){
-                return Logger(extend(extend({}, log.styles), typeof message == 'string' ? parseStyles(message) : message))
-            }
-            else {
-                this.log('%c' + message, createStyles(log.styles))
-            }
-            
         }
 
-        log[__proto__] = LogProto
-
-        log.styles = styles
+        log[__proto__] = base
 
         return log
     }
@@ -2906,79 +2981,297 @@ module.exports = isArray || function (val) {
     // Public interface
     // =====================================
 
-    var LogProto = Logger[prototype]
-
-    function mixin(styles){
-        var source = {}
-        for(var style in styles){
-            !function (name, value){
-                source[name] = {
-                    get: function(){
-                        return Logger(extend(extend({}, this.styles), value))
-                    }
-                }
-            }(style, styles[style])
+    var utils = {
+            id: _id
+        ,   result: _result
+        ,   extend: _extend
+        ,   createStyles: _createStyles
+        ,   parseStyles: _parseStyles
+        ,   divider: _divider
+        ,   callout: _callout
         }
-        Object.defineProperties(LogProto, source)
-    }
 
     var defaults = {
-            large: { 'font-size'  : '18px'    }
-        ,   huge : { 'font-size'  : '24px'    }
-        ,   small: { 'font-size'  : '10px'    }
-
-        ,   info   : { color : '#0074D9' }
-        ,   success: { color : '#2ECC40' }
-        ,   warning: { color : '#FF851B' }
-        ,   danger : { color : '#FF4136' }
-
+            large: { 'font-size'  : '18px' }
+        ,   huge : { 'font-size'  : '24px' }
+        ,   small: { 'font-size'  : '10px' }
+ 
+        ,   info   : { 'color' : '#03a9f4' }
+        ,   success: { 'color' : '#259b24' }
+        ,   warning: { 'color' : '#ff9800' }
+        ,   danger : { 'color' : '#e51c23' }
+ 
         ,   underline  : { 'text-decoration': 'underline'    }
         ,   overline   : { 'text-decoration': 'overline'     }
         ,   linethrough: { 'text-decoration': 'line-through' }
-
+ 
         ,   capitalize: { 'text-transform': 'capitalize' }
         ,   uppercase : { 'text-transform': 'uppercase'  }
         ,   lowercase : { 'text-transform': 'lowercase'  }
-
-        ,   bold: { 'font-weight': 'bold' }
+ 
+        ,   bold  : { 'font-weight': 'bold' }
         ,   italic: { 'font-style': 'italic' }
+ 
+        // like bootstrap <code>...<code/>
+        ,   code: {
+                'color': '#C7254E',
+                'background-color': '#F9F2F4'
+            }
+
+        // just logo
+        ,   logo: {
+                'font-size':'46px'
+            ,   'font-family': 'Roboto, Helvetica, sans-serif'
+            ,   'color': '#FFEB3B'
+            ,   'padding':'20px'
+            ,   'line-height':'110px'
+            ,   'background-color':'#212121;'
+            }
         }
 
-    extend(LogProto, {
-        defaults: defaults
-    ,   mixin: mixin
-    ,   toString: function (){ return createStyles(this.styles) }
-    ,   toJSON: function (){ return this.styles }
-    ,   on: function (){ enabled = true }
-    ,   off: function (){ enabled = false }
-    ,   toggle: function (enable){ enabled = enable !== void 0 ? enable : !enabled }
-    })
-
-    LogProto[__proto__] = Function[prototype]
-
-    mixin(defaults)
+    var proto = _extend(Object.create(Function[prototype]), {
+            mapper: _id
+        ,   styles: {}
+        ,   method: 'log'
+        ,   api: console
+        ,   utils: utils
+        ,   defaults: defaults
+        ,   toString: function (){ return _createStyles(this.styles) }
+        ,   toJSON: function (){ return this.styles }
+        ,   on: function (){ enabled = true }
+        ,   off: function (){ enabled = false }
+        ,   toggle: function (enable){ enabled = enable !== void 0 ? enable : !enabled }
+        ,   constructor: LogFactory
+        })
 
     // =====================================
     // Export
     // =====================================
 
     if (typeof define == 'function' && define.amd) {
-        define(function() { return Logger() })
+        define(function() { return LogFactory(proto) })
     } 
     else if (typeof module != 'undefined' && module.exports) {
-        module.exports = Logger()
+        module.exports = LogFactory(proto)
     } 
     else {
-        global.log = Logger()
+        global.log = LogFactory(proto)
     }
+
 }(this, Object, 'prototype', '__proto__'))
 },{}],7:[function(require,module,exports){
 var expect = require('expect.js')
 ,   log = require('../src/log.js')
 
-describe('Log', function(){
-    it('true should be true', function(){
-        expect(true).to.be.ok()
+describe('log', function(){
+    it('should be defined', function(){
+        expect(log).to.be.ok()
+    })
+
+    it('should be a function', function(){
+        expect(log).to.be.a(Function)
+    })
+
+    describe('#mapper', function(){
+        it('should be a function', function(){
+            expect(log.mapper).to.be.a(Function)
+        })
+
+        it('should be a placeholder by default', function(){
+            var target = {}
+            expect(log.mapper(target)).to.be(target)
+        })
+    })
+
+    describe('#styles', function(){
+        it('should be an object', function(){
+            expect(log.styles).to.be.an(Object)
+        })
+
+        it('should be empty by default', function(){
+            expect(log.styles).to.be.empty()
+        })
+    })
+
+    describe('#method', function(){
+        it('should be "log" by default', function(){
+            expect(log.method).to.be('log')
+        })
+    })
+
+    describe('#api', function(){
+        it('should be `console` by default', function(){
+            expect(log.api).to.be(console)
+        })
+    })
+
+    describe('#toString', function(){
+        it('should be a function', function(){
+            expect(log.toString).to.be.a(Function)
+        })
+
+        it('should stringify `log.styles`', function(){
+            expect(log.toString()).to.be('')
+        })
+    })
+
+    describe('#toJSON', function(){
+        it('should be a function', function(){
+            expect(log.toJSON).to.be.a(Function)
+        })
+
+        it('should return `log.styles`', function(){
+            expect(log.toJSON()).to.be(log.styles)
+        })
+    })
+
+    describe('#on', function(){
+        it('should be a function', function(){
+            expect(log.on).to.be.a(Function)
+        })
+    })
+
+    describe('#off', function(){
+        it('should be a function', function(){
+            expect(log.off).to.be.a(Function)
+        })
+    })
+
+    describe('#toggle', function(){
+        it('should be a function', function(){
+            expect(log.toggle).to.be.a(Function)
+        })
+    })
+
+    describe('#defaults', function(){
+        it('should be an object', function(){
+            expect(log.defaults).to.be.an(Object)
+        })
+    })
+
+    describe('#utils', function(){
+
+        it('should be an object', function(){
+            expect(log.utils).to.be.an(Object)
+        })
+
+        describe('.id', function(){
+            it('should be a function', function(){
+                expect(log.utils.id).to.be.a(Function)
+            })
+
+            it('should be a placeholder', function(){
+                var target = {}
+                expect(log.utils.id(target)).to.be(target)
+            })
+        })
+
+        describe('.result', function(){
+            it('should be a function', function(){
+                expect(log.utils.id).to.be.a(Function)
+            })
+
+            it('should return result of function call if passed function otherwise return passing value', function(){
+                var target = {}
+                expect(log.utils.result(target)).to.be(target)
+                expect(log.utils.result(function(){ return target })).to.be(target)
+            })
+        })
+
+        describe('.extend', function(){
+            it('should be a function', function(){
+                expect(log.utils.extend).to.be.a(Function)
+            })
+
+            it('should copy the values of all enumerable properties from one or more source objects to a target object and return it', function(){
+                var target = {}
+                log.utils.extend(target, {test: 'test', value: 'value'})
+                expect(target).to.have.property('test', 'test')
+                expect(target).to.have.property('value', 'value')
+
+                expect(log.utils.extend({}, {test: 'test'})).to.have.property('test', 'test')
+
+                var target = log.utils.extend({}, {a: 'a'}, {b: 'b'}, {c: 'c'})
+                expect(target).to.have.property('a', 'a')
+                expect(target).to.have.property('b', 'b')
+                expect(target).to.have.property('c', 'c')
+
+                var target = log.utils.extend({a: 'a'}, {a: 'b'}, {b: 'b'}, {b: 'c'})
+                expect(target).to.have.property('a', 'b')
+                expect(target).to.have.property('b', 'c')
+            })
+        })
+
+        describe('.createStyles', function(){
+            it('should be a function', function(){
+                expect(log.utils.createStyles).to.be.a(Function)
+            })
+
+            it('should convert object to valid css style string', function(){
+                expect(log.utils.createStyles({})).to.be('')
+                expect(log.utils.createStyles({color: 'red'})).to.be('color:red;')
+                expect(log.utils.createStyles({color: 'red', padding: '20px'})).to.be('color:red;padding:20px;')
+            })
+        })
+
+        describe('.parseStyles', function(){
+            it('should be a function', function(){
+                expect(log.utils.parseStyles).to.be.a(Function)
+            })
+
+            it('should convert css style string to object', function(){
+                expect(log.utils.parseStyles('')).to.eql({})
+                expect(log.utils.parseStyles(';')).to.eql({})
+                expect(log.utils.parseStyles('color:red')).to.have.property('color','red')
+                expect(log.utils.parseStyles('color:red;padding:20px;')).to.only.have.keys('color', 'padding')
+                expect(log.utils.parseStyles('color: red; padding: 20px; \tfont-size: 100%')).to.only.have.keys('color', 'padding', 'font-size')
+            })
+        })
+
+        describe('.divider', function(){
+            it('should be a function', function(){
+                expect(log.utils.divider).to.be.a(Function)
+            })
+
+            it('should create divider string', function(){
+                expect(log.utils.divider()).to.be('=================================================')
+            })
+            it('should support optional message, symbol and length', function(){
+                expect(log.utils.divider('message')).to.be('==================== message ====================')
+                expect(log.utils.divider('message', '-')).to.be('-------------------- message --------------------')
+                expect(log.utils.divider('message', 20)).to.be('===== message =====')
+                expect(log.utils.divider('message', '-', 20)).to.be('----- message -----')
+                expect(log.utils.divider('-', 20)).to.be('-------------------')
+                expect(log.utils.divider(20, '-')).to.be('-------------------')
+                expect(log.utils.divider('-')).to.be('-------------------------------------------------')
+                expect(log.utils.divider(20)).to.be('===================')
+            })
+            it('should works well with multiline message', function(){
+                expect(log.utils.divider('message\nmessage')).to.be('==================== message ====================\n==================== message ====================')
+                expect(log.utils.divider('message\r\nmessage')).to.be('==================== message ====================\n==================== message ====================')
+                expect(log.utils.divider('message\n\rmessage')).to.be('==================== message ====================\n==================== message ====================')
+            })
+        })
+
+        describe('.callout', function(){
+            it('should be a function', function(){
+                expect(log.utils.callout).to.be.a(Function)
+            })
+
+            it('should create ASCII callout', function(){
+                expect(log.utils.callout('callout')).to.be(['\t▌','\t▌ callout','\t▌'].join('\r\n'))
+            })
+
+            it('should support optional symbol', function(){
+                expect(log.utils.callout('callout', '|')).to.be(['\t|','\t| callout','\t|'].join('\r\n'))
+            })
+
+            it('should works well with multiline message', function(){
+                expect(log.utils.callout('callout\ncallout')).to.be(['\t▌','\t▌ callout','\t▌ callout','\t▌'].join('\r\n'))
+                expect(log.utils.callout('callout\r\ncallout')).to.be(['\t▌','\t▌ callout','\t▌ callout','\t▌'].join('\r\n'))
+                expect(log.utils.callout('callout\n\rcallout')).to.be(['\t▌','\t▌ callout','\t▌ callout','\t▌'].join('\r\n'))
+            })
+        })
     })
 })
 },{"../src/log.js":6,"expect.js":5}]},{},[7]);
