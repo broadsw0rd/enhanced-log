@@ -2855,7 +2855,7 @@ module.exports = isArray || function (val) {
     var enabled = true
 
     function _log(message, logger){
-        enabled && logger.api[logger.method]('%c' + logger.mapper(message), _createStyles(logger.styles))
+        enabled && logger.api[logger.method]('%c' + logger.mapper(message), _createStyles(_result(logger.styles)))
     }
 
     // -------------------------------------
@@ -2878,6 +2878,18 @@ module.exports = isArray || function (val) {
             }
         }
         return target
+    }
+
+    function _compose(){
+        var functions = Array.apply(null, arguments)
+        ,   count = functions.length - 1
+
+        return function composed() {
+          var i = count
+          ,   result = functions[count].apply(null, arguments)
+          while (i--) result = functions[i].apply(null, result)
+          return result
+        }
     }
 
     // {'color': '#C7254E','background-color': '#F9F2F4'} => "color:#C7254E;background-color:#F9F2F4;"
@@ -2984,6 +2996,7 @@ module.exports = isArray || function (val) {
     var utils = {
             id: _id
         ,   result: _result
+        ,   compose: _compose
         ,   extend: _extend
         ,   createStyles: _createStyles
         ,   parseStyles: _parseStyles
@@ -2992,42 +3005,123 @@ module.exports = isArray || function (val) {
         }
 
     var defaults = {
-            large: { 'font-size'  : '18px' }
-        ,   huge : { 'font-size'  : '24px' }
-        ,   small: { 'font-size'  : '10px' }
- 
-        ,   info   : { 'color' : '#03a9f4' }
-        ,   success: { 'color' : '#259b24' }
-        ,   warning: { 'color' : '#ff9800' }
-        ,   danger : { 'color' : '#e51c23' }
- 
-        ,   underline  : { 'text-decoration': 'underline'    }
-        ,   overline   : { 'text-decoration': 'overline'     }
-        ,   linethrough: { 'text-decoration': 'line-through' }
- 
-        ,   capitalize: { 'text-transform': 'capitalize' }
-        ,   uppercase : { 'text-transform': 'uppercase'  }
-        ,   lowercase : { 'text-transform': 'lowercase'  }
- 
-        ,   bold  : { 'font-weight': 'bold' }
-        ,   italic: { 'font-style': 'italic' }
- 
-        // like bootstrap <code>...<code/>
-        ,   code: {
-                'color': '#C7254E',
-                'background-color': '#F9F2F4'
+            large: { 
+                styles: { 
+                    'font-size'  : '18px' 
+                } 
             }
-
+        ,   huge: { 
+                styles: { 
+                    'font-size'  : '24px' 
+                } 
+            }
+        ,   small: { 
+                styles: { 
+                    'font-size'  : '10px' 
+                } 
+            } 
+        ,   info: { 
+                styles: { 
+                    'color' : '#03a9f4' 
+                } 
+            }
+        ,   success: { 
+                styles: { 
+                    'color' : '#259b24' 
+                } 
+            }
+        ,   warning: { 
+                styles: { 
+                    'color' : '#ff9800' 
+                } 
+            }
+        ,   danger: { 
+                styles: { 
+                    'color' : '#e51c23' 
+                } 
+            } 
+        ,   underline: { 
+                styles: { 
+                    'text-decoration': 'underline'
+                } 
+            }
+        ,   overline: { 
+                styles: { 
+                    'text-decoration': 'overline'
+                } 
+            }
+        ,   linethrough: { 
+                styles: { 
+                    'text-decoration': 'line-through' 
+                } 
+            } 
+        ,   capitalize: { 
+                styles: { 
+                    'text-transform': 'capitalize' 
+                } 
+            }
+        ,   uppercase: { 
+                styles: { 
+                    'text-transform': 'uppercase'  
+                } 
+            }
+        ,   lowercase: { 
+                styles: { 
+                    'text-transform': 'lowercase'  
+                } 
+            } 
+        ,   bold: { 
+                styles: { 
+                    'font-weight': 'bold'   
+                } 
+            }
+        ,   italic: { 
+                styles: { 
+                    'font-style' : 'italic' 
+                } 
+            } 
+        // like bootstrap <code>...<code/>
+        ,   code: { 
+                styles: {
+                    'color': '#C7254E'
+                ,   'background-color': '#F9F2F4'
+                }
+            }
         // just logo
-        ,   logo: {
-                'font-size':'46px'
-            ,   'font-family': 'Roboto, Helvetica, sans-serif'
-            ,   'color': '#FFEB3B'
-            ,   'padding':'20px'
-            ,   'line-height':'110px'
-            ,   'background-color':'#212121;'
+        ,   logo: { 
+                styles:{
+                    'font-size':'46px'
+                ,   'font-family': 'Roboto, Helvetica, sans-serif'
+                ,   'color': '#FFEB3B'
+                ,   'padding':'20px'
+                ,   'line-height':'110px'
+                ,   'background-color':'#212121;'
+                }
             }
         }
+
+    function mixin(styles){
+        var source = {}
+        for(var style in styles){
+            !function (name, value){
+                proto.defaults[name] = value
+                source[name] = {
+                    get: function(){
+                        // return LogFactory(_extend(Object.create(this), value, {
+                        //     styles: _extend.bind(null, _result.bind(null, value.styles), _result.bind(null, this.styles))
+                        // ,   mapper: _compose(value.mapper, this.mapper)
+                        // }))
+
+                        return LogFactory(_extend(Object.create(this), value, {
+                            styles: _compose(_extend, [].map.bind([value.styles, this.styles], _result))
+                        ,   mapper: _compose(value.mapper, this.mapper)
+                        }))
+                    }
+                }
+            }(style, styles[style])
+        }
+        Object.defineProperties(proto, source)
+    }
 
     var proto = _extend(Object.create(Function[prototype]), {
             mapper: _id
@@ -3035,14 +3129,17 @@ module.exports = isArray || function (val) {
         ,   method: 'log'
         ,   api: console
         ,   utils: utils
-        ,   defaults: defaults
-        ,   toString: function (){ return _createStyles(this.styles) }
+        ,   defaults: {}
+        ,   mixin: mixin
+        ,   toString: function (){ return _createStyles(_result(this.styles)) }
         ,   toJSON: function (){ return this.styles }
         ,   on: function (){ enabled = true }
         ,   off: function (){ enabled = false }
         ,   toggle: function (enable){ enabled = enable !== void 0 ? enable : !enabled }
         ,   constructor: LogFactory
         })
+
+    mixin(defaults)
 
     // =====================================
     // Export
@@ -3149,6 +3246,10 @@ describe('log', function(){
         })
     })
 
+    describe('#mixin', function(){
+
+    })
+
     describe('#utils', function(){
 
         it('should be an object', function(){
@@ -3175,6 +3276,12 @@ describe('log', function(){
                 var target = {}
                 expect(log.utils.result(target)).to.be(target)
                 expect(log.utils.result(function(){ return target })).to.be(target)
+            })
+        })
+
+        describe('.compose', function(){
+            it('should be a function', function(){
+                expect(log.utils.compose).to.be.a(Function)
             })
         })
 

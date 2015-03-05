@@ -87,6 +87,10 @@ describe('log', function(){
         })
     })
 
+    describe('#mixin', function(){
+
+    })
+
     describe('#utils', function(){
 
         it('should be an object', function(){
@@ -113,6 +117,12 @@ describe('log', function(){
                 var target = {}
                 expect(log.utils.result(target)).to.be(target)
                 expect(log.utils.result(function(){ return target })).to.be(target)
+            })
+        })
+
+        describe('.compose', function(){
+            it('should be a function', function(){
+                expect(log.utils.compose).to.be.a(Function)
             })
         })
 
