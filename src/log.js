@@ -270,7 +270,7 @@
         Object.defineProperties(proto, source)
     }
 
-    var proto = _extend(Object.create(Function[prototype]), {
+    var proto = LogFactory[prototype] = _extend(Object.create(Function[prototype]), {
             mapper: _id
         ,   styles: {}
         ,   method: 'log'

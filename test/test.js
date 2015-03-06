@@ -1,137 +1,137 @@
-var expect = require('expect.js')
-,   log = require('../src/log.js')
+import expect from 'expect.js'
+import log from '../src/log.js'
 
-describe('log', function(){
-    it('should be defined', function(){
+describe('log', () => {
+    it('should be defined', () => {
         expect(log).to.be.ok()
     })
 
-    it('should be a function', function(){
+    it('should be a function', () => {
         expect(log).to.be.a(Function)
     })
 
-    describe('#mapper', function(){
-        it('should be a function', function(){
+    describe('#mapper', () => {
+        it('should be a function', () => {
             expect(log.mapper).to.be.a(Function)
         })
 
-        it('should be a placeholder by default', function(){
+        it('should be a placeholder by default', () => {
             var target = {}
             expect(log.mapper(target)).to.be(target)
         })
     })
 
-    describe('#styles', function(){
-        it('should be an object', function(){
+    describe('#styles', () => {
+        it('should be an object', () => {
             expect(log.styles).to.be.an(Object)
         })
 
-        it('should be empty by default', function(){
+        it('should be empty by default', () => {
             expect(log.styles).to.be.empty()
         })
     })
 
-    describe('#method', function(){
-        it('should be "log" by default', function(){
+    describe('#method', () => {
+        it('should be "log" by default', () => {
             expect(log.method).to.be('log')
         })
     })
 
-    describe('#api', function(){
-        it('should be `console` by default', function(){
+    describe('#api', () => {
+        it('should be `console` by default', () => {
             expect(log.api).to.be(console)
         })
     })
 
-    describe('#toString', function(){
-        it('should be a function', function(){
+    describe('#toString', () => {
+        it('should be a function', () => {
             expect(log.toString).to.be.a(Function)
         })
 
-        it('should stringify `log.styles`', function(){
+        it('should stringify `log.styles`', () => {
             expect(log.toString()).to.be('')
         })
     })
 
-    describe('#toJSON', function(){
-        it('should be a function', function(){
+    describe('#toJSON', () => {
+        it('should be a function', () => {
             expect(log.toJSON).to.be.a(Function)
         })
 
-        it('should return `log.styles`', function(){
+        it('should return `log.styles`', () => {
             expect(log.toJSON()).to.be(log.styles)
         })
     })
 
-    describe('#on', function(){
-        it('should be a function', function(){
+    describe('#on', () => {
+        it('should be a function', () => {
             expect(log.on).to.be.a(Function)
         })
     })
 
-    describe('#off', function(){
-        it('should be a function', function(){
+    describe('#off', () => {
+        it('should be a function', () => {
             expect(log.off).to.be.a(Function)
         })
     })
 
-    describe('#toggle', function(){
-        it('should be a function', function(){
+    describe('#toggle', () => {
+        it('should be a function', () => {
             expect(log.toggle).to.be.a(Function)
         })
     })
 
-    describe('#defaults', function(){
-        it('should be an object', function(){
+    describe('#defaults', () => {
+        it('should be an object', () => {
             expect(log.defaults).to.be.an(Object)
         })
     })
 
-    describe('#mixin', function(){
+    describe('#mixin', () => {
 
     })
 
-    describe('#utils', function(){
+    describe('#utils', () => {
 
-        it('should be an object', function(){
+        it('should be an object', () => {
             expect(log.utils).to.be.an(Object)
         })
 
-        describe('.id', function(){
-            it('should be a function', function(){
+        describe('.id', () => {
+            it('should be a function', () => {
                 expect(log.utils.id).to.be.a(Function)
             })
 
-            it('should be a placeholder', function(){
+            it('should be a placeholder', () => {
                 var target = {}
                 expect(log.utils.id(target)).to.be(target)
             })
         })
 
-        describe('.result', function(){
-            it('should be a function', function(){
+        describe('.result', () => {
+            it('should be a function', () => {
                 expect(log.utils.id).to.be.a(Function)
             })
 
-            it('should return result of function call if passed function otherwise return passing value', function(){
+            it('should return result of function call if passed function otherwise return passing value', () => {
                 var target = {}
                 expect(log.utils.result(target)).to.be(target)
-                expect(log.utils.result(function(){ return target })).to.be(target)
+                expect(log.utils.result(() => { return target })).to.be(target)
             })
         })
 
-        describe('.compose', function(){
-            it('should be a function', function(){
+        describe('.compose', () => {
+            it('should be a function', () => {
                 expect(log.utils.compose).to.be.a(Function)
             })
         })
 
-        describe('.extend', function(){
-            it('should be a function', function(){
+        describe('.extend', () => {
+            it('should be a function', () => {
                 expect(log.utils.extend).to.be.a(Function)
             })
 
-            it('should copy the values of all enumerable properties from one or more source objects to a target object and return it', function(){
+            it('should copy the values of all enumerable properties from one or more source objects to a target object and return it', () => {
                 var target = {}
                 log.utils.extend(target, {test: 'test', value: 'value'})
                 expect(target).to.have.property('test', 'test')
@@ -150,24 +150,24 @@ describe('log', function(){
             })
         })
 
-        describe('.createStyles', function(){
-            it('should be a function', function(){
+        describe('.createStyles', () => {
+            it('should be a function', () => {
                 expect(log.utils.createStyles).to.be.a(Function)
             })
 
-            it('should convert object to valid css style string', function(){
+            it('should convert object to valid css style string', () => {
                 expect(log.utils.createStyles({})).to.be('')
                 expect(log.utils.createStyles({color: 'red'})).to.be('color:red;')
                 expect(log.utils.createStyles({color: 'red', padding: '20px'})).to.be('color:red;padding:20px;')
             })
         })
 
-        describe('.parseStyles', function(){
-            it('should be a function', function(){
+        describe('.parseStyles', () => {
+            it('should be a function', () => {
                 expect(log.utils.parseStyles).to.be.a(Function)
             })
 
-            it('should convert css style string to object', function(){
+            it('should convert css style string to object', () => {
                 expect(log.utils.parseStyles('')).to.eql({})
                 expect(log.utils.parseStyles(';')).to.eql({})
                 expect(log.utils.parseStyles('color:red')).to.have.property('color','red')
@@ -176,15 +176,15 @@ describe('log', function(){
             })
         })
 
-        describe('.divider', function(){
-            it('should be a function', function(){
+        describe('.divider', () => {
+            it('should be a function', () => {
                 expect(log.utils.divider).to.be.a(Function)
             })
 
-            it('should create divider string', function(){
+            it('should create divider string', () => {
                 expect(log.utils.divider()).to.be('=================================================')
             })
-            it('should support optional message, symbol and length', function(){
+            it('should support optional message, symbol and length', () => {
                 expect(log.utils.divider('message')).to.be('==================== message ====================')
                 expect(log.utils.divider('message', '-')).to.be('-------------------- message --------------------')
                 expect(log.utils.divider('message', 20)).to.be('===== message =====')
@@ -194,27 +194,27 @@ describe('log', function(){
                 expect(log.utils.divider('-')).to.be('-------------------------------------------------')
                 expect(log.utils.divider(20)).to.be('===================')
             })
-            it('should works well with multiline message', function(){
+            it('should works well with multiline message', () => {
                 expect(log.utils.divider('message\nmessage')).to.be('==================== message ====================\n==================== message ====================')
                 expect(log.utils.divider('message\r\nmessage')).to.be('==================== message ====================\n==================== message ====================')
                 expect(log.utils.divider('message\n\rmessage')).to.be('==================== message ====================\n==================== message ====================')
             })
         })
 
-        describe('.callout', function(){
-            it('should be a function', function(){
+        describe('.callout', () => {
+            it('should be a function', () => {
                 expect(log.utils.callout).to.be.a(Function)
             })
 
-            it('should create ASCII callout', function(){
+            it('should create ASCII callout', () => {
                 expect(log.utils.callout('callout')).to.be(['\t▌','\t▌ callout','\t▌'].join('\r\n'))
             })
 
-            it('should support optional symbol', function(){
+            it('should support optional symbol', () => {
                 expect(log.utils.callout('callout', '|')).to.be(['\t|','\t| callout','\t|'].join('\r\n'))
             })
 
-            it('should works well with multiline message', function(){
+            it('should works well with multiline message', () => {
                 expect(log.utils.callout('callout\ncallout')).to.be(['\t▌','\t▌ callout','\t▌ callout','\t▌'].join('\r\n'))
                 expect(log.utils.callout('callout\r\ncallout')).to.be(['\t▌','\t▌ callout','\t▌ callout','\t▌'].join('\r\n'))
                 expect(log.utils.callout('callout\n\rcallout')).to.be(['\t▌','\t▌ callout','\t▌ callout','\t▌'].join('\r\n'))

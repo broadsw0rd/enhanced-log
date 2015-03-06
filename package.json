@@ -25,6 +25,8 @@
     "devDependencies": {
         "browserify"    : "latest",
         "uglify-js"     : "latest",
+        "babel"         : "latest",
+        "babelify"      : "latest",
         "mocha"         : "latest",
         "expect.js"     : "latest",
         "jshint"        : "latest",
@@ -39,7 +41,7 @@
     "scripts": {
         "build": "uglifyjs -c -m -- src/log.js > dist/log.min.js",
         "lint" : "jshint --reporter node_modules/jshint-stylish/stylish.js src/log.js",
-        "test" : "mocha tests/tests.js",
-        "test-browser": "browserify tests/tests.js -o tests/tests-browser.js"
+        "test" : "mocha --compilers js:babel/register test/test.js",
+        "test-browser": "browserify test/test.js -t babelify -o test/test-browser.js"
     }
 }
