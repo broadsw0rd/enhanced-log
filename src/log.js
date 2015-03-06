@@ -1,4 +1,4 @@
-;(function (global, Object, prototype, __proto__){
+;(function (global, Object, Array, prototype, __proto__){
 
     // =====================================
     // Private interface
@@ -14,7 +14,7 @@
 
     function _inherit(parent, child){
         return LogFactory(_extend(Object.create(parent), child, {
-                    styles: _compose(_extend, [].map.bind([child.styles || {}, parent.styles], _result))
+                    styles: _compose(Function.apply.bind(_extend, null), Array[prototype].map.bind([child.styles || {}, parent.styles], _result))
                 ,   mapper: _compose(child.mapper || _id, parent.mapper)
                 }))
     }
@@ -47,7 +47,7 @@
 
         return function composed() {
             for(var i = count, result = functions[i].apply(null, arguments); i--;) {
-                result = functions[i].apply(null, result)
+                result = functions[i].call(null, result)
             }
             return result
         }
@@ -55,7 +55,7 @@
 
     // {'color': '#C7254E','background-color': '#F9F2F4'} => "color:#C7254E;background-color:#F9F2F4;"
     function _createStyles(styles){
-        styles = JSON.stringify(styles).replace(/[{}"]/g, '').replace(',', ';')
+        styles = JSON.stringify(styles).replace(/[{}"]/g, '').replace(/,/g, ';')
         return styles ? styles + ';' : ''
     }
 
@@ -147,7 +147,7 @@
 
         function log(message){
             'use strict';
-            _log(message, this)
+            _log(message, log)
         }
 
         log[__proto__] = base
@@ -301,7 +301,7 @@
         ,   defaults: {}
         ,   mixin: mixin
         ,   toString: function (){ return _createStyles(_result(this.styles)) }
-        ,   toJSON: function (){ return this.styles }
+        ,   toJSON: function (){ return _result(this.styles) }
         ,   on: function (){ enabled = true }
         ,   off: function (){ enabled = false }
         ,   toggle: function (enable){ enabled = enable !== void 0 ? enable : !enabled }
@@ -324,4 +324,4 @@
         global.log = LogFactory()
     }
 
-}(this, Object, 'prototype', '__proto__'))
+}(this, Object, Array, 'prototype', '__proto__'))

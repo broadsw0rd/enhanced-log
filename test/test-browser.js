@@ -2848,7 +2848,7 @@ module.exports = isArray || function (val) {
 },{"buffer":1}],6:[function(require,module,exports){
 "use strict";
 
-;(function (global, Object, prototype, __proto__) {
+;(function (global, Object, Array, prototype, __proto__) {
 
     // =====================================
     // Private interface
@@ -2857,7 +2857,16 @@ module.exports = isArray || function (val) {
     var enabled = true;
 
     function _log(message, logger) {
-        if (enabled) logger.api[logger.method]("%c" + logger.mapper(message), _createStyles(_result(logger.styles)));
+        if (enabled) {
+            logger.api[logger.method]("%c" + logger.mapper(message), _createStyles(_result(logger.styles)));
+        }
+    }
+
+    function _inherit(parent, child) {
+        return LogFactory(_extend(Object.create(parent), child, {
+            styles: _compose(Function.apply.bind(_extend, null), Array[prototype].map.bind([child.styles || {}, parent.styles], _result)),
+            mapper: _compose(child.mapper || _id, parent.mapper)
+        }));
     }
 
     // -------------------------------------
@@ -2887,23 +2896,25 @@ module.exports = isArray || function (val) {
             count = functions.length - 1;
 
         return function composed() {
-            var i = count,
-                result = functions[count].apply(null, arguments);
-            while (i--) result = functions[i].apply(null, result);
+            for (var i = count, result = functions[i].apply(null, arguments); i--;) {
+                result = functions[i].call(null, result);
+            }
             return result;
         };
     }
 
     // {'color': '#C7254E','background-color': '#F9F2F4'} => "color:#C7254E;background-color:#F9F2F4;"
     function _createStyles(styles) {
-        styles = JSON.stringify(styles).replace(/[{}"]/g, "").replace(",", ";");
+        styles = JSON.stringify(styles).replace(/[{}"]/g, "").replace(/,/g, ";");
         return styles ? styles + ";" : "";
     }
 
     // "color:#C7254E;background-color:#F9F2F4;" => {'color': '#C7254E','background-color': '#F9F2F4'}
     function _parseStyles(styles) {
         return styles.replace(/\s+/g, "").replace(/;$/, "").split(";").reduce(function (acc, style) {
-            if (style) acc[(style = style.split(":"), style[0])] = style[1];
+            if (style) {
+                acc[(style = style.split(":"), style[0])] = style[1];
+            }
             return acc;
         }, {});
     }
@@ -2968,17 +2979,6 @@ module.exports = isArray || function (val) {
         }
     }
 
-    // -------------------------------------
-    // Inheritence
-    // -------------------------------------
-
-    function _inherit(parent, child) {
-        return LogFactory(_extend(Object.create(parent), child, {
-            styles: _compose(_extend, [].map.bind([child.styles || {}, parent.styles], _result)),
-            mapper: _compose(child.mapper || _id, parent.mapper)
-        }));
-    }
-
     // =====================================
     // Constructor
     // =====================================
@@ -2988,6 +2988,7 @@ module.exports = isArray || function (val) {
 
         function log(message) {
             "use strict";
+            _log(message, log);
         }
 
         log[__proto__] = base;
@@ -3026,6 +3027,7 @@ module.exports = isArray || function (val) {
                 "font-size": "10px"
             }
         },
+
         info: {
             styles: {
                 color: "#03a9f4"
@@ -3046,6 +3048,7 @@ module.exports = isArray || function (val) {
                 color: "#e51c23"
             }
         },
+
         underline: {
             styles: {
                 "text-decoration": "underline"
@@ -3061,6 +3064,7 @@ module.exports = isArray || function (val) {
                 "text-decoration": "line-through"
             }
         },
+
         capitalize: {
             styles: {
                 "text-transform": "capitalize"
@@ -3076,6 +3080,7 @@ module.exports = isArray || function (val) {
                 "text-transform": "lowercase"
             }
         },
+
         bold: {
             styles: {
                 "font-weight": "bold"
@@ -3086,6 +3091,7 @@ module.exports = isArray || function (val) {
                 "font-style": "italic"
             }
         }
+
         // like bootstrap <code>...<code/>
         , code: {
             styles: {
@@ -3093,6 +3099,7 @@ module.exports = isArray || function (val) {
                 "background-color": "#F9F2F4"
             }
         }
+
         // just logo
         , logo: {
             styles: {
@@ -3169,7 +3176,7 @@ module.exports = isArray || function (val) {
     } else {
         global.log = LogFactory();
     }
-})(undefined, Object, "prototype", "__proto__");
+})(undefined, Object, Array, "prototype", "__proto__");
 
 },{}],7:[function(require,module,exports){
 "use strict";
@@ -3338,6 +3345,7 @@ describe("log", function () {
                 expect(log.utils.createStyles({})).to.be("");
                 expect(log.utils.createStyles({ color: "red" })).to.be("color:red;");
                 expect(log.utils.createStyles({ color: "red", padding: "20px" })).to.be("color:red;padding:20px;");
+                expect(log.utils.createStyles({ color: "red", padding: "20px", "font-size": "18px" })).to.be("color:red;padding:20px;font-size:18px;");
             });
         });
 

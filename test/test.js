@@ -159,6 +159,7 @@ describe('log', () => {
                 expect(log.utils.createStyles({})).to.be('')
                 expect(log.utils.createStyles({color: 'red'})).to.be('color:red;')
                 expect(log.utils.createStyles({color: 'red', padding: '20px'})).to.be('color:red;padding:20px;')
+                expect(log.utils.createStyles({color: 'red', padding: '20px', 'font-size': '18px'})).to.be('color:red;padding:20px;font-size:18px;')
             })
         })
 
