@@ -7,7 +7,9 @@
     var enabled = true
 
     function _log(message, logger){
-        if(enabled) logger.api[logger.method]('%c' + logger.mapper(message), _createStyles(_result(logger.styles)))
+        if(enabled) {
+            logger.api[logger.method]('%c' + logger.mapper(message), _createStyles(_result(logger.styles)))
+        }
     }
 
     function _inherit(parent, child){
@@ -44,10 +46,10 @@
         ,   count = functions.length - 1
 
         return function composed() {
-          var i = count
-          ,   result = functions[count].apply(null, arguments)
-          while (i--) result = functions[i].apply(null, result)
-          return result
+            for(var i = count, result = functions[i].apply(null, arguments); i--;) {
+                result = functions[i].apply(null, result)
+            }
+            return result
         }
     }
 
@@ -60,7 +62,9 @@
     // "color:#C7254E;background-color:#F9F2F4;" => {'color': '#C7254E','background-color': '#F9F2F4'}
     function _parseStyles(styles){
         return styles.replace(/\s+/g, '').replace(/;$/, '').split(';').reduce(function (acc, style){
-            if(style) acc[style = style.split(':'), style[0]] = style[1]
+            if(style) {
+                acc[style = style.split(':'), style[0]] = style[1]
+            }
             return acc
         }, {})
     }
@@ -143,6 +147,7 @@
 
         function log(message){
             'use strict';
+            _log(message, this)
         }
 
         log[__proto__] = base
