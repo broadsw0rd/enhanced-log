@@ -7,7 +7,14 @@
     var enabled = true
 
     function _log(message, logger){
-        enabled && logger.api[logger.method]('%c' + logger.mapper(message), _createStyles(_result(logger.styles)))
+        if(enabled) logger.api[logger.method]('%c' + logger.mapper(message), _createStyles(_result(logger.styles)))
+    }
+
+    function _inherit(parent, child){
+        return LogFactory(_extend(Object.create(parent), child, {
+                    styles: _compose(_extend, [].map.bind([child.styles || {}, parent.styles], _result))
+                ,   mapper: _compose(child.mapper || _id, parent.mapper)
+                }))
     }
 
     // -------------------------------------
@@ -132,6 +139,8 @@
     // =====================================
 
     function LogFactory(base){
+        base = base || proto
+
         function log(message){
             'use strict';
         }
@@ -172,6 +181,7 @@
                     'font-size'  : '10px' 
                 } 
             } 
+
         ,   info: { 
                 styles: { 
                     'color' : '#03a9f4' 
@@ -192,6 +202,7 @@
                     'color' : '#e51c23' 
                 } 
             } 
+
         ,   underline: { 
                 styles: { 
                     'text-decoration': 'underline'
@@ -207,6 +218,7 @@
                     'text-decoration': 'line-through' 
                 } 
             } 
+
         ,   capitalize: { 
                 styles: { 
                     'text-transform': 'capitalize' 
@@ -222,6 +234,7 @@
                     'text-transform': 'lowercase'  
                 } 
             } 
+
         ,   bold: { 
                 styles: { 
                     'font-weight': 'bold'   
@@ -232,6 +245,7 @@
                     'font-style' : 'italic' 
                 } 
             } 
+
         // like bootstrap <code>...<code/>
         ,   code: { 
                 styles: {
@@ -239,6 +253,7 @@
                 ,   'background-color': '#F9F2F4'
                 }
             }
+
         // just logo
         ,   logo: { 
                 styles:{
@@ -250,6 +265,13 @@
                 ,   'background-color':'#212121;'
                 }
             }
+
+        ,   divider: {
+                mapper: _divider
+            }
+        ,   callout: {
+                mapper: _callout
+            }
         }
 
     function mixin(styles){
@@ -258,12 +280,7 @@
             !function (name, value){
                 proto.defaults[name] = value
                 source[name] = {
-                    get: function(){
-                        return LogFactory(_extend(Object.create(this), value, {
-                            styles: _compose(_extend, [].map.bind([value.styles || {}, this.styles], _result))
-                        ,   mapper: _compose(value.mapper || _id, this.mapper)
-                        }))
-                    }
+                    get: function(){ return _inherit(this, value) }
                 }
             }(style, styles[style])
         }
@@ -293,13 +310,13 @@
     // =====================================
 
     if (typeof define == 'function' && define.amd) {
-        define(function() { return LogFactory(proto) })
+        define(function() { return LogFactory() })
     } 
     else if (typeof module != 'undefined' && module.exports) {
-        module.exports = LogFactory(proto)
+        module.exports = LogFactory()
     } 
     else {
-        global.log = LogFactory(proto)
+        global.log = LogFactory()
     }
 
 }(this, Object, 'prototype', '__proto__'))

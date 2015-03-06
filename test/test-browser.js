@@ -2857,7 +2857,7 @@ module.exports = isArray || function (val) {
     var enabled = true;
 
     function _log(message, logger) {
-        enabled && logger.api[logger.method]("%c" + logger.mapper(message), _createStyles(_result(logger.styles)));
+        if (enabled) logger.api[logger.method]("%c" + logger.mapper(message), _createStyles(_result(logger.styles)));
     }
 
     // -------------------------------------
@@ -2968,11 +2968,24 @@ module.exports = isArray || function (val) {
         }
     }
 
+    // -------------------------------------
+    // Inheritence
+    // -------------------------------------
+
+    function _inherit(parent, child) {
+        return LogFactory(_extend(Object.create(parent), child, {
+            styles: _compose(_extend, [].map.bind([child.styles || {}, parent.styles], _result)),
+            mapper: _compose(child.mapper || _id, parent.mapper)
+        }));
+    }
+
     // =====================================
     // Constructor
     // =====================================
 
     function LogFactory(base) {
+        base = base || proto;
+
         function log(message) {
             "use strict";
         }
@@ -3090,6 +3103,13 @@ module.exports = isArray || function (val) {
                 "line-height": "110px",
                 "background-color": "#212121;"
             }
+        },
+
+        divider: {
+            mapper: _divider
+        },
+        callout: {
+            mapper: _callout
         }
     };
 
@@ -3100,10 +3120,7 @@ module.exports = isArray || function (val) {
                 proto.defaults[name] = value;
                 source[name] = {
                     get: function get() {
-                        return LogFactory(_extend(Object.create(this), value, {
-                            styles: _compose(_extend, [].map.bind([value.styles || {}, this.styles], _result)),
-                            mapper: _compose(value.mapper || _id, this.mapper)
-                        }));
+                        return _inherit(this, value);
                     }
                 };
             })(style, styles[style]);
@@ -3111,7 +3128,7 @@ module.exports = isArray || function (val) {
         Object.defineProperties(proto, source);
     }
 
-    var proto = _extend(Object.create(Function[prototype]), {
+    var proto = LogFactory[prototype] = _extend(Object.create(Function[prototype]), {
         mapper: _id,
         styles: {},
         method: "log",
@@ -3145,12 +3162,12 @@ module.exports = isArray || function (val) {
 
     if (typeof define == "function" && define.amd) {
         define(function () {
-            return LogFactory(proto);
+            return LogFactory();
         });
     } else if (typeof module != "undefined" && module.exports) {
-        module.exports = LogFactory(proto);
+        module.exports = LogFactory();
     } else {
-        global.log = LogFactory(proto);
+        global.log = LogFactory();
     }
 })(undefined, Object, "prototype", "__proto__");
 
