@@ -1,7 +1,39 @@
 import expect from 'expect.js'
+import sinon from 'sinon'
 import log from '../src/log.js'
 
+let defaults = [
+        'large'
+    ,   'huge'
+    ,   'small'
+    ,   'info'
+    ,   'success'
+    ,   'warning'
+    ,   'danger'
+    ,   'underline'
+    ,   'overline'
+    ,   'linethrough'
+    ,   'capitalize'
+    ,   'uppercase'
+    ,   'lowercase'
+    ,   'bold'
+    ,   'italic'
+    ,   'code'
+    ,   'logo'
+    ,   'divider'
+    ,   'callout'
+    ]
+
+beforeEach(() => {
+    sinon.spy(console, 'log')
+})
+
+afterEach(() => {
+    console.log.restore()
+})
+
 describe('log', () => {
+
     it('should be defined', () => {
         expect(log).to.be.ok()
     })
@@ -10,13 +42,71 @@ describe('log', () => {
         expect(log).to.be.a(Function)
     })
 
+    it('should call `console.log` with message and styles by default', () => {
+        log('message')
+        expect(console.log.calledOnce).to.be.ok()
+        expect(console.log.getCall(0).args[0]).to.be('%cmessage')
+        expect(console.log.getCall(0).args[1]).to.be(log.toString())
+    })
+
+    it('should have default styling methods', () => {
+        defaults.forEach((method) => {
+            expect(log[method]).to.be.ok()
+        })
+    })
+
+    describe('each of this methods', () => {
+
+        it('should return new instance of `log`', () => {
+            defaults.forEach((method) => {
+                expect(log[method]).to.be.ok()
+                expect(log[method]).to.be.a(Function)
+                expect(log[method]).to.be.a(log.constructor)
+            })
+        })
+
+        it('should call `console.log` with mapped message and own styles', () => {
+            defaults.forEach((method, idx) => {
+                log[method]('message')
+                expect(console.log.getCall(idx).args[0]).to.be('%c' + log[method].mapper('message'))
+                expect(console.log.getCall(idx).args[1]).to.be(log[method].toString())
+            })
+        })
+
+        it('should correct converts to String', () => {
+            defaults.forEach((method, idx) => {
+                expect(log[method].toString()).to.be(log.utils.createStyles(log.utils.result(log[method].styles)))
+            })
+        })
+
+        it('should correct converts to JSON', () => {
+            defaults.forEach((method, idx) => {
+                expect(log[method].toJSON()).to.eql(log.utils.result(log[method].styles))
+            })
+        })
+
+        it('should be chainable', () => {
+            log.large.danger.capitalize('message')
+            expect(console.log.getCall(0).args[0]).to.be('%cmessage')
+            expect(console.log.getCall(0).args[1]).to.be(log.large.danger.capitalize.toString())
+
+            log.divider.callout('message')
+            expect(console.log.getCall(1).args[0]).to.be('%c' + log.divider.callout.mapper('message'))
+            expect(console.log.getCall(1).args[1]).to.be(log.divider.callout.toString())
+
+            log.divider.info('message')
+            expect(console.log.getCall(2).args[0]).to.be('%c' + log.divider.info.mapper('message'))
+            expect(console.log.getCall(2).args[1]).to.be(log.divider.info.toString())
+        })
+    })
+
     describe('#mapper', () => {
         it('should be a function', () => {
             expect(log.mapper).to.be.a(Function)
         })
 
         it('should be a placeholder by default', () => {
-            var target = {}
+            let target = {}
             expect(log.mapper(target)).to.be(target)
         })
     })
@@ -64,26 +154,94 @@ describe('log', () => {
     })
 
     describe('#on', () => {
+        beforeEach(() => {
+            log.off()
+        })
+
         it('should be a function', () => {
             expect(log.on).to.be.a(Function)
+        })
+
+        it('should enable logging', () => {
+            log('missing message')
+            log.on()
+            log('message')
+            expect(console.log.calledOnce).to.be.ok()
+            expect(console.log.getCall(0).args[0]).to.be('%cmessage')
         })
     })
 
     describe('#off', () => {
+        afterEach(() => {
+            log.on()
+        })
+
         it('should be a function', () => {
             expect(log.off).to.be.a(Function)
+        })
+
+        it('should disable logging', () => {
+            log('message')
+            log.off()
+            log('missing message')
+            expect(console.log.calledOnce).to.be.ok()
+            expect(console.log.getCall(0).args[0]).to.be('%cmessage')
         })
     })
 
     describe('#toggle', () => {
+        afterEach(() => {
+            log.on()
+        })
+
         it('should be a function', () => {
             expect(log.toggle).to.be.a(Function)
+        })
+
+        it('should toggle logging', function(){
+            log('first call')
+            log.toggle()
+            log('missed call')
+            log.toggle()
+            log('second call')
+            log.toggle(true)
+            log('third call')
+            log.toggle(false)
+            log('missed call')
+            expect(console.log.callCount).to.be(3)
+            expect(console.log.getCall(0).args[0]).to.be('%cfirst call')
+            expect(console.log.getCall(1).args[0]).to.be('%csecond call')
+            expect(console.log.getCall(2).args[0]).to.be('%cthird call')
         })
     })
 
     describe('#defaults', () => {
         it('should be an object', () => {
             expect(log.defaults).to.be.an(Object)
+        })
+
+        it('should have properties equals each styling methods', () => {
+            expect(log.defaults).to.only.have.keys(defaults)
+        })
+
+        describe('changing any property of `log#defaults`', () => {
+            let oldColor = log.defaults.danger.styles.color
+            
+            before(() => {
+                log.defaults.danger.styles.color = '#fff'
+                log.defaults.danger.styles.border = '1px solid red'
+            })
+            
+            after(() => {
+                log.defaults.danger.styles.color = oldColor
+                delete log.defaults.danger.styles.border
+            })
+
+            it('should change those method behaviour', () => {
+                log.danger('message')
+                expect(console.log.getCall(0).args[0]).to.be('%cmessage')
+                expect(console.log.getCall(0).args[1]).to.be(log.utils.createStyles(log.defaults.danger.styles))
+            })
         })
     })
 
@@ -103,7 +261,7 @@ describe('log', () => {
             })
 
             it('should be a placeholder', () => {
-                var target = {}
+                let target = {}
                 expect(log.utils.id(target)).to.be(target)
             })
         })
@@ -114,7 +272,7 @@ describe('log', () => {
             })
 
             it('should return result of function call if passed function otherwise return passing value', () => {
-                var target = {}
+                let target = {}
                 expect(log.utils.result(target)).to.be(target)
                 expect(log.utils.result(() => { return target })).to.be(target)
             })
@@ -124,6 +282,14 @@ describe('log', () => {
             it('should be a function', () => {
                 expect(log.utils.compose).to.be.a(Function)
             })
+
+            it('should compose functions', () => {
+                let f = (x) => x*2
+                ,   g = (x) => x+2
+
+                expect(log.utils.compose(f, g)(2)).to.be(8)
+                expect(log.utils.compose(g, f)(2)).to.be(6)
+            })
         })
 
         describe('.extend', () => {
@@ -132,19 +298,19 @@ describe('log', () => {
             })
 
             it('should copy the values of all enumerable properties from one or more source objects to a target object and return it', () => {
-                var target = {}
+                let target = {}
                 log.utils.extend(target, {test: 'test', value: 'value'})
                 expect(target).to.have.property('test', 'test')
                 expect(target).to.have.property('value', 'value')
 
                 expect(log.utils.extend({}, {test: 'test'})).to.have.property('test', 'test')
 
-                var target = log.utils.extend({}, {a: 'a'}, {b: 'b'}, {c: 'c'})
+                target = log.utils.extend({}, {a: 'a'}, {b: 'b'}, {c: 'c'})
                 expect(target).to.have.property('a', 'a')
                 expect(target).to.have.property('b', 'b')
                 expect(target).to.have.property('c', 'c')
 
-                var target = log.utils.extend({a: 'a'}, {a: 'b'}, {b: 'b'}, {b: 'c'})
+                target = log.utils.extend({a: 'a'}, {a: 'b'}, {b: 'b'}, {b: 'c'})
                 expect(target).to.have.property('a', 'b')
                 expect(target).to.have.property('b', 'c')
             })

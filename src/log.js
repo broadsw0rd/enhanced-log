@@ -14,7 +14,7 @@
 
     function _inherit(parent, child){
         return LogFactory(_extend(Object.create(parent), child, {
-                    styles: _compose(Function.apply.bind(_extend, null), Array[prototype].map.bind([child.styles || {}, parent.styles], _result))
+                    styles: _compose(Function.apply.bind(_extend, null), Array[prototype].map.bind([{}, child.styles || {}, parent.styles], _result))
                 ,   mapper: _compose(child.mapper || _id, parent.mapper)
                 }))
     }
@@ -61,9 +61,9 @@
 
     // "color:#C7254E;background-color:#F9F2F4;" => {'color': '#C7254E','background-color': '#F9F2F4'}
     function _parseStyles(styles){
-        return styles.replace(/\s+/g, '').replace(/;$/, '').split(';').reduce(function (acc, style){
+        return styles.replace(/;$/, '').split(';').reduce(function (acc, style){
             if(style) {
-                acc[style = style.split(':'), style[0]] = style[1]
+                acc[style = style.split(':'), style[0].trim()] = style[1].trim()
             }
             return acc
         }, {})
@@ -279,15 +279,15 @@
             }
         }
 
-    function mixin(styles){
+    function mixin(target){
         var source = {}
-        for(var style in styles){
+        for(var prop in target){
             !function (name, value){
                 proto.defaults[name] = value
                 source[name] = {
                     get: function(){ return _inherit(this, value) }
                 }
-            }(style, styles[style])
+            }(prop, target[prop])
         }
         Object.defineProperties(proto, source)
     }

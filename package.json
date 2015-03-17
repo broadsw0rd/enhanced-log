@@ -29,6 +29,7 @@
         "babelify"      : "latest",
         "mocha"         : "latest",
         "expect.js"     : "latest",
+        "sinon"         : "latest",
         "jshint"        : "latest",
         "jshint-stylish": "latest"
     },
