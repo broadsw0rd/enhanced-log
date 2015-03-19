@@ -9,7 +9,7 @@
     ],
     "license": "MIT",
     "bugs": { 
-        "url": "",
+        "url": "https://github.com/broadsw0rd/enhanced-log/issues",
         "email": "broadsw.rd@yandex.ru"
     },
     "author": {
@@ -20,7 +20,7 @@
     "main": "dist/log.min.js",
     "repository" :{ 
         "type" : "git", 
-        "url" : ""
+        "url" : "https://github.com/broadsw0rd/enhanced-log"
     },
     "devDependencies": {
         "browserify"    : "latest",
