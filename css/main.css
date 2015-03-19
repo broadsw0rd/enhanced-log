@@ -1,98 +1,26 @@
 body {
     font-family: 'Roboto';
     font-size: 16px;
-    position: relative;
-    padding-bottom: 60px;
 }
 
 .navbar {
+    border: none;
     border-radius: 0px;
 }
 
-.container header.jumbotron {
-    padding: 0;
-    background-color: transparent; 
+.navbar.black {
+    background-color: #212121;
 }
 
-.container .demo{
-    text-align: center;
+.navbar.black .navbar-brand.yellow {
+    color: #FFEB3B;
 }
 
-pre code {
-    font-size: 14px;
+.navbar.black .nav.yellow a {
+    color: #FFEB3B;
 }
 
-footer{
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-}
-
-footer.well {
-    margin-bottom: 0;
-    border-radius: 0;
-}
-
-@media screen and (max-width: 768px){
-    body {
-        font-size: 14px;
-    }
-
-    .page-header h2{
-        font-size: 24px;
-    }
-
-    h3 {
-        font-size: 18px;
-    }
-
-    pre code {
-        font-size: 14px;
-    }
-}
-
-.log-large { 
-    font-size: 18px    
-}
-.log-huge { 
-    font-size: 24px    
-}
-.log-small { 
-    font-size: 10px    
-}
-.log-info { 
-    color: #0074D9 
-}
-.log-success { 
-    color : #2ECC40 
-}
-.log-warning { 
-    color : #FF851B 
-}
-.log-danger { 
-    color : #FF4136 
-}
-.log-underline { 
-    text-decoration: underline    
-}
-.log-overline { 
-    text-decoration: overline     
-}
-.log-linethrough { 
-    text-decoration: line-through 
-}
-.log-capitalize { 
-    text-transform: capitalize 
-}
-.log-uppercase { 
-    text-transform: uppercase  
-}
-.log-lowercase { 
-    text-transform: lowercase  
-}
-.log-bold { 
-    font-weight: bold 
-}
-.log-italic { 
-    font-style: italic 
+.navbar.black .nav.yellow a:hover {
+    background-color: #FFEB3B;
+    color: #212121;
 }

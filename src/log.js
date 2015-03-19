@@ -55,7 +55,9 @@
 
     // {'color': '#C7254E','background-color': '#F9F2F4'} => "color:#C7254E;background-color:#F9F2F4;"
     function _createStyles(styles){
-        styles = JSON.stringify(styles).replace(/[{}"]/g, '').replace(/,/g, ';')
+        styles = Object.keys(styles).reduce(function (acc, style){
+            return acc.push([style, styles[style]].join(':')), acc
+        }, []).join(';')
         return styles ? styles + ';' : ''
     }
 

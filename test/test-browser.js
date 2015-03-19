@@ -9540,7 +9540,9 @@ exports.install = function install(target, now, toFake) {
 
     // {'color': '#C7254E','background-color': '#F9F2F4'} => "color:#C7254E;background-color:#F9F2F4;"
     function _createStyles(styles) {
-        styles = JSON.stringify(styles).replace(/[{}"]/g, "").replace(/,/g, ";");
+        styles = Object.keys(styles).reduce(function (acc, style) {
+            return (acc.push([style, styles[style]].join(":")), acc);
+        }, []).join(";");
         return styles ? styles + ";" : "";
     }
 
@@ -10047,7 +10049,15 @@ describe("log", function () {
         });
     });
 
-    describe("#mixin", function () {});
+    describe("#mixin", function () {
+        it("should add chainable styling method to prototype", function () {});
+
+        it("should correct inherit styling and mapper property even if `style` is a function", function () {});
+
+        it("should support optional `api` and `method` properties", function () {});
+
+        it("should add mixed properties to `log#defaults`", function () {});
+    });
 
     describe("#utils", function () {
 

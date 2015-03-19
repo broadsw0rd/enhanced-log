@@ -246,7 +246,21 @@ describe('log', () => {
     })
 
     describe('#mixin', () => {
+        it('should add chainable styling method to prototype', () => {
 
+        })
+
+        it('should correct inherit styling and mapper property even if `style` is a function', () => {
+
+        })
+
+        it('should support optional `api` and `method` properties', () => {
+
+        })
+
+        it('should add mixed properties to `log#defaults`', () => {
+
+        })
     })
 
     describe('#utils', () => {
