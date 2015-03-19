@@ -288,6 +288,7 @@
                 proto.defaults[name] = value
                 source[name] = {
                     get: function(){ return _inherit(this, value) }
+                ,   configurable: true
                 }
             }(prop, target[prop])
         }

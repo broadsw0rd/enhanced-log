@@ -246,20 +246,75 @@ describe('log', () => {
     })
 
     describe('#mixin', () => {
-        it('should add chainable styling method to prototype', () => {
-
+        afterEach(() => {
+            delete log.constructor.prototype.test
         })
 
-        it('should correct inherit styling and mapper property even if `style` is a function', () => {
+        it('should add chainable styling method to prototype', () => {
+            let logger = {
+                    styles: {
+                        color: 'red'
+                    }
+                ,   mapper: (arg) => `(${arg})`
+                }
 
+            log.mixin({ test: logger })
+
+            log.capitalize.test.large('message')
+            expect(console.log.getCall(0).args[0]).to.be('%c(message)')
+            expect(console.log.getCall(0).args[1]).to.be(log.capitalize.test.large.toString())
+        })
+
+        it('should correct inherit styling property even if `style` is a function', () => {
+            let logger = {
+                    styles: () => ({ color: 'red' })
+                ,   mapper: (arg) => `(${arg})`
+                }
+
+            log.mixin({ test: logger })
+
+            log.capitalize.test.large('message')
+            expect(console.log.getCall(0).args[0]).to.be('%c(message)')
+            expect(console.log.getCall(0).args[1]).to.be(log.capitalize.test.large.toString())
         })
 
         it('should support optional `api` and `method` properties', () => {
+            let logger = {
+                    styles: {
+                        color: 'red'
+                    }
+                ,   mapper: (arg) => `(${arg})`
+                ,   method: 'method'
+                ,   api: {
+                        method: () => {}
+                    }
+                }
 
+            sinon.spy(logger.api, 'method')
+
+            log.mixin({ test: logger })
+
+            log.test('message')
+
+            expect(logger.api.method.calledOnce).to.be.ok()
+            expect(logger.api.method.getCall(0).args[0]).to.be('%c(message)')
+            expect(logger.api.method.getCall(0).args[1]).to.be(log.utils.createStyles(logger.styles))
         })
 
         it('should add mixed properties to `log#defaults`', () => {
+            let logger = {
+                    styles: {
+                        color: 'red'
+                    }
+                ,   mapper: (arg) => `(${arg})`
+                ,   method: 'method'
+                ,   api: {
+                        method: () => {}
+                    }
+                }
 
+            log.mixin({ test: logger })
+            expect(log.defaults.test).to.be(logger)
         })
     })
 

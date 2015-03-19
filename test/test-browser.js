@@ -9765,7 +9765,8 @@ exports.install = function install(target, now, toFake) {
                 source[name] = {
                     get: function get() {
                         return _inherit(this, value);
-                    }
+                    },
+                    configurable: true
                 };
             })(prop, target[prop]);
         }
@@ -10050,13 +10051,86 @@ describe("log", function () {
     });
 
     describe("#mixin", function () {
-        it("should add chainable styling method to prototype", function () {});
+        afterEach(function () {
+            delete log.constructor.prototype.test;
+        });
 
-        it("should correct inherit styling and mapper property even if `style` is a function", function () {});
+        it("should add chainable styling method to prototype", function () {
+            var logger = {
+                styles: {
+                    color: "red"
+                },
+                mapper: function (arg) {
+                    return "(" + arg + ")";
+                }
+            };
 
-        it("should support optional `api` and `method` properties", function () {});
+            log.mixin({ test: logger });
 
-        it("should add mixed properties to `log#defaults`", function () {});
+            log.capitalize.test.large("message");
+            expect(console.log.getCall(0).args[0]).to.be("%c(message)");
+            expect(console.log.getCall(0).args[1]).to.be(log.capitalize.test.large.toString());
+        });
+
+        it("should correct inherit styling property even if `style` is a function", function () {
+            var logger = {
+                styles: function () {
+                    return { color: "red" };
+                },
+                mapper: function (arg) {
+                    return "(" + arg + ")";
+                }
+            };
+
+            log.mixin({ test: logger });
+
+            log.capitalize.test.large("message");
+            expect(console.log.getCall(0).args[0]).to.be("%c(message)");
+            expect(console.log.getCall(0).args[1]).to.be(log.capitalize.test.large.toString());
+        });
+
+        it("should support optional `api` and `method` properties", function () {
+            var logger = {
+                styles: {
+                    color: "red"
+                },
+                mapper: function (arg) {
+                    return "(" + arg + ")";
+                },
+                method: "method",
+                api: {
+                    method: function () {}
+                }
+            };
+
+            sinon.spy(logger.api, "method");
+
+            log.mixin({ test: logger });
+
+            log.test("message");
+
+            expect(logger.api.method.calledOnce).to.be.ok();
+            expect(logger.api.method.getCall(0).args[0]).to.be("%c(message)");
+            expect(logger.api.method.getCall(0).args[1]).to.be(log.utils.createStyles(logger.styles));
+        });
+
+        it("should add mixed properties to `log#defaults`", function () {
+            var logger = {
+                styles: {
+                    color: "red"
+                },
+                mapper: function (arg) {
+                    return "(" + arg + ")";
+                },
+                method: "method",
+                api: {
+                    method: function () {}
+                }
+            };
+
+            log.mixin({ test: logger });
+            expect(log.defaults.test).to.be(logger);
+        });
     });
 
     describe("#utils", function () {
