@@ -1,12 +1,8 @@
 # Enhanced Log
 
->Amazing, flexible, extendable wrapper for `console.log`
+>Amazing, flexible, extendable wrapper for `console.log` for enhance [styling console output](https://developer.chrome.com/devtools/docs/console#styling-console-output-with-css)
 
 [![Build Status](https://travis-ci.org/broadsw0rd/enhanced-log.svg?branch=master)](https://travis-ci.org/broadsw0rd/enhanced-log)
-
-## About
-
-Robust wrapper for `console.log` for enhance [styling console output](https://developer.chrome.com/devtools/docs/console#styling-console-output-with-css) 
 
 ## Install
 
