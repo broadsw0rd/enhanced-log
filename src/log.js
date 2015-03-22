@@ -4,6 +4,8 @@
     // Private interface
     // =====================================
 
+    var _map = Array[prototype].map
+
     var enabled = true
 
     function _log(message, logger){
@@ -14,7 +16,7 @@
 
     function _inherit(parent, child){
         return LogFactory(_extend(Object.create(parent), child, {
-                    styles: _compose(Function.apply.bind(_extend, null), Array[prototype].map.bind([{}, child.styles || {}, parent.styles], _result))
+                    styles: _compose(_spreadExtend, _map.bind([{}, parent.styles, child.styles || {}], _result))
                 ,   mapper: _compose(child.mapper || _id, parent.mapper)
                 }))
     }
@@ -70,6 +72,8 @@
             return acc
         }, {})
     }
+
+    var _spreadExtend = Function.apply.bind(_extend, null)
 
     // -------------------------------------
     // Divider

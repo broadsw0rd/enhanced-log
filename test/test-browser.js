@@ -9489,6 +9489,8 @@ exports.install = function install(target, now, toFake) {
     // Private interface
     // =====================================
 
+    var _map = Array[prototype].map;
+
     var enabled = true;
 
     function _log(message, logger) {
@@ -9499,7 +9501,7 @@ exports.install = function install(target, now, toFake) {
 
     function _inherit(parent, child) {
         return LogFactory(_extend(Object.create(parent), child, {
-            styles: _compose(Function.apply.bind(_extend, null), Array[prototype].map.bind([{}, child.styles || {}, parent.styles], _result)),
+            styles: _compose(_spreadExtend, _map.bind([{}, parent.styles, child.styles || {}], _result)),
             mapper: _compose(child.mapper || _id, parent.mapper)
         }));
     }
@@ -9555,6 +9557,8 @@ exports.install = function install(target, now, toFake) {
             return acc;
         }, {});
     }
+
+    var _spreadExtend = Function.apply.bind(_extend, null);
 
     // -------------------------------------
     // Divider
@@ -9902,6 +9906,10 @@ describe("log", function () {
             log.divider.info("message");
             expect(console.log.getCall(2).args[0]).to.be("%c" + log.divider.info.mapper("message"));
             expect(console.log.getCall(2).args[1]).to.be(log.divider.info.toString());
+        });
+
+        it("should correct override css properties", function () {
+            expect(log.small.large.huge.toString()).to.be(log.huge.toString());
         });
     });
 

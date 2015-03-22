@@ -98,6 +98,10 @@ describe('log', () => {
             expect(console.log.getCall(2).args[0]).to.be('%c' + log.divider.info.mapper('message'))
             expect(console.log.getCall(2).args[1]).to.be(log.divider.info.toString())
         })
+
+        it('should correct override css properties', () => {
+            expect(log.small.large.huge.toString()).to.be(log.huge.toString())
+        })
     })
 
     describe('#mapper', () => {
