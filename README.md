@@ -104,4 +104,28 @@ log.callout('message') // useful for emphasize
     ▌ message
     ▌ 
 
+### log.styles
+
+### log.mapper(message)
+
+### log.api
+
+### log.method
+
+### log.toString()
+
+### log.toJSON()
+
+### log.on()
+
+### log.off()
+
+### log.toggle(state)
+
+### log.defaults
+
+### log.mixin()
+
+### log.utils
+
 ## Advanced Usage
