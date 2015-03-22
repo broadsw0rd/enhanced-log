@@ -9913,7 +9913,7 @@ describe("log", function () {
         });
     });
 
-    describe("#mapper", function () {
+    describe(".mapper()", function () {
         it("should be a function", function () {
             expect(log.mapper).to.be.a(Function);
         });
@@ -9924,7 +9924,7 @@ describe("log", function () {
         });
     });
 
-    describe("#styles", function () {
+    describe(".styles", function () {
         it("should be an object", function () {
             expect(log.styles).to.be.an(Object);
         });
@@ -9934,19 +9934,19 @@ describe("log", function () {
         });
     });
 
-    describe("#method", function () {
+    describe(".method", function () {
         it("should be \"log\" by default", function () {
             expect(log.method).to.be("log");
         });
     });
 
-    describe("#api", function () {
+    describe(".api", function () {
         it("should be `console` by default", function () {
             expect(log.api).to.be(console);
         });
     });
 
-    describe("#toString", function () {
+    describe(".toString()", function () {
         it("should be a function", function () {
             expect(log.toString).to.be.a(Function);
         });
@@ -9956,7 +9956,7 @@ describe("log", function () {
         });
     });
 
-    describe("#toJSON", function () {
+    describe(".toJSON()", function () {
         it("should be a function", function () {
             expect(log.toJSON).to.be.a(Function);
         });
@@ -9966,7 +9966,7 @@ describe("log", function () {
         });
     });
 
-    describe("#on", function () {
+    describe(".on()", function () {
         beforeEach(function () {
             log.off();
         });
@@ -9984,7 +9984,7 @@ describe("log", function () {
         });
     });
 
-    describe("#off", function () {
+    describe(".off()", function () {
         afterEach(function () {
             log.on();
         });
@@ -10002,7 +10002,7 @@ describe("log", function () {
         });
     });
 
-    describe("#toggle", function () {
+    describe(".toggle()", function () {
         afterEach(function () {
             log.on();
         });
@@ -10028,7 +10028,7 @@ describe("log", function () {
         });
     });
 
-    describe("#defaults", function () {
+    describe(".defaults", function () {
         it("should be an object", function () {
             expect(log.defaults).to.be.an(Object);
         });
@@ -10037,11 +10037,11 @@ describe("log", function () {
             expect(log.defaults).to.only.have.keys(defaults);
         });
 
-        describe("changing any property of `log#defaults`", function () {
+        describe("changing any property of `log.defaults`", function () {
             var oldColor = log.defaults.danger.styles.color;
 
             before(function () {
-                log.defaults.danger.styles.color = "#fff";
+                log.defaults.danger.styles.color = ".fff";
                 log.defaults.danger.styles.border = "1px solid red";
             });
 
@@ -10058,7 +10058,7 @@ describe("log", function () {
         });
     });
 
-    describe("#mixin", function () {
+    describe(".mixin()", function () {
         afterEach(function () {
             delete log.constructor.prototype.test;
         });
@@ -10122,7 +10122,7 @@ describe("log", function () {
             expect(logger.api.method.getCall(0).args[1]).to.be(log.utils.createStyles(logger.styles));
         });
 
-        it("should add mixed properties to `log#defaults`", function () {
+        it("should add mixed properties to `log.defaults`", function () {
             var logger = {
                 styles: {
                     color: "red"
@@ -10141,13 +10141,13 @@ describe("log", function () {
         });
     });
 
-    describe("#utils", function () {
+    describe(".utils", function () {
 
         it("should be an object", function () {
             expect(log.utils).to.be.an(Object);
         });
 
-        describe(".id", function () {
+        describe(".id()", function () {
             it("should be a function", function () {
                 expect(log.utils.id).to.be.a(Function);
             });
@@ -10158,7 +10158,7 @@ describe("log", function () {
             });
         });
 
-        describe(".result", function () {
+        describe(".result()", function () {
             it("should be a function", function () {
                 expect(log.utils.id).to.be.a(Function);
             });
@@ -10172,7 +10172,7 @@ describe("log", function () {
             });
         });
 
-        describe(".compose", function () {
+        describe(".compose()", function () {
             it("should be a function", function () {
                 expect(log.utils.compose).to.be.a(Function);
             });
@@ -10190,7 +10190,7 @@ describe("log", function () {
             });
         });
 
-        describe(".extend", function () {
+        describe(".extend()", function () {
             it("should be a function", function () {
                 expect(log.utils.extend).to.be.a(Function);
             });
@@ -10214,7 +10214,7 @@ describe("log", function () {
             });
         });
 
-        describe(".createStyles", function () {
+        describe(".createStyles()", function () {
             it("should be a function", function () {
                 expect(log.utils.createStyles).to.be.a(Function);
             });
@@ -10227,7 +10227,7 @@ describe("log", function () {
             });
         });
 
-        describe(".parseStyles", function () {
+        describe(".parseStyles()", function () {
             it("should be a function", function () {
                 expect(log.utils.parseStyles).to.be.a(Function);
             });
@@ -10241,7 +10241,7 @@ describe("log", function () {
             });
         });
 
-        describe(".divider", function () {
+        describe(".divider()", function () {
             it("should be a function", function () {
                 expect(log.utils.divider).to.be.a(Function);
             });
@@ -10266,7 +10266,7 @@ describe("log", function () {
             });
         });
 
-        describe(".callout", function () {
+        describe(".callout()", function () {
             it("should be a function", function () {
                 expect(log.utils.callout).to.be.a(Function);
             });

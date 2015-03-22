@@ -104,7 +104,7 @@ describe('log', () => {
         })
     })
 
-    describe('#mapper', () => {
+    describe('.mapper()', () => {
         it('should be a function', () => {
             expect(log.mapper).to.be.a(Function)
         })
@@ -115,7 +115,7 @@ describe('log', () => {
         })
     })
 
-    describe('#styles', () => {
+    describe('.styles', () => {
         it('should be an object', () => {
             expect(log.styles).to.be.an(Object)
         })
@@ -125,19 +125,19 @@ describe('log', () => {
         })
     })
 
-    describe('#method', () => {
+    describe('.method', () => {
         it('should be "log" by default', () => {
             expect(log.method).to.be('log')
         })
     })
 
-    describe('#api', () => {
+    describe('.api', () => {
         it('should be `console` by default', () => {
             expect(log.api).to.be(console)
         })
     })
 
-    describe('#toString', () => {
+    describe('.toString()', () => {
         it('should be a function', () => {
             expect(log.toString).to.be.a(Function)
         })
@@ -147,7 +147,7 @@ describe('log', () => {
         })
     })
 
-    describe('#toJSON', () => {
+    describe('.toJSON()', () => {
         it('should be a function', () => {
             expect(log.toJSON).to.be.a(Function)
         })
@@ -157,7 +157,7 @@ describe('log', () => {
         })
     })
 
-    describe('#on', () => {
+    describe('.on()', () => {
         beforeEach(() => {
             log.off()
         })
@@ -175,7 +175,7 @@ describe('log', () => {
         })
     })
 
-    describe('#off', () => {
+    describe('.off()', () => {
         afterEach(() => {
             log.on()
         })
@@ -193,7 +193,7 @@ describe('log', () => {
         })
     })
 
-    describe('#toggle', () => {
+    describe('.toggle()', () => {
         afterEach(() => {
             log.on()
         })
@@ -219,7 +219,7 @@ describe('log', () => {
         })
     })
 
-    describe('#defaults', () => {
+    describe('.defaults', () => {
         it('should be an object', () => {
             expect(log.defaults).to.be.an(Object)
         })
@@ -228,11 +228,11 @@ describe('log', () => {
             expect(log.defaults).to.only.have.keys(defaults)
         })
 
-        describe('changing any property of `log#defaults`', () => {
+        describe('changing any property of `log.defaults`', () => {
             let oldColor = log.defaults.danger.styles.color
             
             before(() => {
-                log.defaults.danger.styles.color = '#fff'
+                log.defaults.danger.styles.color = '.fff'
                 log.defaults.danger.styles.border = '1px solid red'
             })
             
@@ -249,7 +249,7 @@ describe('log', () => {
         })
     })
 
-    describe('#mixin', () => {
+    describe('.mixin()', () => {
         afterEach(() => {
             delete log.constructor.prototype.test
         })
@@ -305,7 +305,7 @@ describe('log', () => {
             expect(logger.api.method.getCall(0).args[1]).to.be(log.utils.createStyles(logger.styles))
         })
 
-        it('should add mixed properties to `log#defaults`', () => {
+        it('should add mixed properties to `log.defaults`', () => {
             let logger = {
                     styles: {
                         color: 'red'
@@ -322,13 +322,13 @@ describe('log', () => {
         })
     })
 
-    describe('#utils', () => {
+    describe('.utils', () => {
 
         it('should be an object', () => {
             expect(log.utils).to.be.an(Object)
         })
 
-        describe('.id', () => {
+        describe('.id()', () => {
             it('should be a function', () => {
                 expect(log.utils.id).to.be.a(Function)
             })
@@ -339,7 +339,7 @@ describe('log', () => {
             })
         })
 
-        describe('.result', () => {
+        describe('.result()', () => {
             it('should be a function', () => {
                 expect(log.utils.id).to.be.a(Function)
             })
@@ -351,7 +351,7 @@ describe('log', () => {
             })
         })
 
-        describe('.compose', () => {
+        describe('.compose()', () => {
             it('should be a function', () => {
                 expect(log.utils.compose).to.be.a(Function)
             })
@@ -365,7 +365,7 @@ describe('log', () => {
             })
         })
 
-        describe('.extend', () => {
+        describe('.extend()', () => {
             it('should be a function', () => {
                 expect(log.utils.extend).to.be.a(Function)
             })
@@ -389,7 +389,7 @@ describe('log', () => {
             })
         })
 
-        describe('.createStyles', () => {
+        describe('.createStyles()', () => {
             it('should be a function', () => {
                 expect(log.utils.createStyles).to.be.a(Function)
             })
@@ -402,7 +402,7 @@ describe('log', () => {
             })
         })
 
-        describe('.parseStyles', () => {
+        describe('.parseStyles()', () => {
             it('should be a function', () => {
                 expect(log.utils.parseStyles).to.be.a(Function)
             })
@@ -416,7 +416,7 @@ describe('log', () => {
             })
         })
 
-        describe('.divider', () => {
+        describe('.divider()', () => {
             it('should be a function', () => {
                 expect(log.utils.divider).to.be.a(Function)
             })
@@ -441,7 +441,7 @@ describe('log', () => {
             })
         })
 
-        describe('.callout', () => {
+        describe('.callout()', () => {
             it('should be a function', () => {
                 expect(log.utils.callout).to.be.a(Function)
             })
