@@ -10,13 +10,39 @@
 
 Browserify:
 
-    var log = require('enhanced-log')
+```js
+var log = require('enhanced-log')
+```
 
 Browser: 
 
-    <script src="log.min.js">
+```html
+<script src="log.min.js">
+```
 
 `log` has several chainable methods for styling your console output:
+
+```js
+// you can combine it what you want and enjoy
+
+log('message')
+// equal
+console.log('%cmessage', '')
+
+log.info('message')
+// equal
+console.log('%cmessage', 'color:#03a9f4;')
+
+log.large.capitalize.info('message') 
+// equal
+console.log('%cmessage', 'color:#03a9f4;text-transform:capitalize;font-size:18px;')
+```
+
+## API
+
+### log.`<style>[.<style>...](message)`
+
+List of chainable styling methods:
 
 - `large`
 - `huge`
@@ -38,22 +64,44 @@ Browser:
 - `divider`
 - `callout`
 
-This methods very similar to CSS classes:
+This methods very similar to CSS classes: 
 
-    // you can combine it what you want and enjoy
-    
-    log('message')
-    // equal
-    console.log('%cmessage', '')
-    
-    log.info('message')
-    // equal
-    console.log('%cmessage', 'color:#03a9f4;')
-    
-    log.large.capitalize.info('message') 
-    // equal
-    console.log('%cmessage', 'color:#03a9f4;text-transform:capitalize;font-size:18px;')
+- each can apply defined styles to output
 
-## API
+```js
+log.large      // font-size:18px;
+log.info       // color:#03a9f4;
+log.large.info // color:#03a9f4;font-size:18px;
+```
+
+- order doesn't matter
+
+```js
+log.info.large // same styles as `log.large.info`
+```
+
+- in case of conflict last override previous
+
+```js
+log.small.large.huge // equal to log.huge
+```
+
+#### Few words about `callout` and `divider`
+
+These two methods are modify log string:
+
+```js
+log.divider('message') // useful for separating output
+```
+
+    ==================== message ====================
+
+```js
+log.callout('message') // useful for emphasize
+```
+
+    ▌ 
+    ▌ message
+    ▌ 
 
 ## Advanced Usage
