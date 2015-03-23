@@ -3,6 +3,8 @@
 >Amazing, flexible, extendable wrapper for `console.log` for enhance [styling console output](https://developer.chrome.com/devtools/docs/console#styling-console-output-with-css)
 
 [![Build Status](https://travis-ci.org/broadsw0rd/enhanced-log.svg?branch=master)](https://travis-ci.org/broadsw0rd/enhanced-log)
+[![Dependency Status](https://david-dm.org/broadsw0rd/enhanced-log.svg)](https://david-dm.org/broadsw0rd/enhanced-log)
+[![devDependency Status](https://david-dm.org/broadsw0rd/enhanced-log/dev-status.svg)](https://david-dm.org/broadsw0rd/enhanced-log#info=devDependencies)
 
 ## Install
 
