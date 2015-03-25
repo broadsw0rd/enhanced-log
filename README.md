@@ -1,6 +1,6 @@
 # Enhanced Log
 
->Amazing, flexible, extendable wrapper for `console.log` for enhance [styling console output](https://developer.chrome.com/devtools/docs/console#styling-console-output-with-css)
+>Amazing, flexible, extendable library for enhance [styling console output](https://developer.chrome.com/devtools/docs/console#styling-console-output-with-css)
 
 [![Build Status](https://travis-ci.org/broadsw0rd/enhanced-log.svg?branch=master)](https://travis-ci.org/broadsw0rd/enhanced-log)
 [![Coverage Status](https://coveralls.io/repos/broadsw0rd/enhanced-log/badge.svg)](https://coveralls.io/r/broadsw0rd/enhanced-log)
@@ -123,8 +123,8 @@ log.divider.callout('message')
 ```
 
     ▌
-	▌ ==================== message ====================
-	▌
+    ▌ ==================== message ====================
+    ▌
 
 ### log.styles
 
@@ -132,11 +132,19 @@ log.divider.callout('message')
 
 ### log.api
 
+```js
+log.api === console // true
+```
+
 By default it is `console` object, that means each instance of `log` use console API for logging, but you can define your own logging API and `log` will work fine with it, see [Advanced Usage](#advanced-usage)
 
 ### log.method
 
-By default it is `"log"`, that means each instance of `log` use `console.log` for logging, but you can redefine this behaviour:
+```js
+log.method // "log"
+```
+
+By default it is `"log"`, that means each instance of `log` use `console["log"]` for logging, but you can redefine this behaviour:
 
 ```js
 var warning = log.warning
