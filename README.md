@@ -126,7 +126,7 @@ log.divider.callout('message')
     ▌ ==================== message ====================
     ▌
 
-### log.styles
+### log.`styles`
 
 Object or function of CSS properties for styling output
 
@@ -142,7 +142,7 @@ log.code.styles() // {color: "#C7254E", background-color: "#F9F2F4"}
 
 Please do not modify this object, use [`log.defaults`](#logdefaults) instead
 
-### log.mapper(message)
+### log.`mapper(message)`
 
 Function which modify log message before output
 
@@ -164,7 +164,7 @@ success.divider('text')
 // ================== Ok :: text ==================
 ```
 
-### log.api
+### log.`api`
 
 ```js
 log.api === console // true
@@ -172,7 +172,7 @@ log.api === console // true
 
 By default it is `console` object, that means each instance of `log` use console API for logging, but you can define your own logging API and `log` will work fine with it, see [Advanced Usage](#advanced-usage)
 
-### log.method
+### log.`method`
 
 ```js
 log.method // "log"
@@ -190,7 +190,7 @@ warning('Warning Message') // console.warn('%cWarning Message', 'color:#ff9800;'
 
 Useful for filtering log messages by types
 
-### log.toString()
+### log.`toString()`
 
 String representation of `log` instance:
 
@@ -204,11 +204,11 @@ Useful for applying different styles to single log message. More info [here](htt
 console.log('%cAmazing, flexible, extendable wrapper for %cconsole.log%c to enhance %cstyling console output', log, log.code, log, log.bold) // try this in your DevTools
 ```
 
-### log.toJSON()
+### log.`toJSON()`
 
 Serialize log instance
 
-### log.off()
+### log.`off()`
 
 Prevent **each** instance of `log` from output to console, works globally:
 
@@ -220,11 +220,11 @@ error.off()
 log.info('message') // nothing happens
 ```
 
-### log.on()
+### log.`on()`
 
 Resume output to console for **each** instance of `log`, works globally too
 
-### log.toggle([state])
+### log.`toggle([state])`
 
 Toggle output to console, if `state` defined, `true` value will enable output, `false` - disable
 
@@ -232,7 +232,7 @@ Toggle output to console, if `state` defined, `true` value will enable output, `
 log.toggle(DEBUG) // prevent output if DEBUG === false
 ```
 
-### log.defaults
+### log.`defaults`
 
 Object of default styling properties of each styling methods. Used for customizing predefined styling methods:
 
@@ -263,7 +263,7 @@ log.success('Success Message')
 console.log('%cOk :: Success Message', 'color:#259b24')
 ```
 
-### log.mixin(target)
+### log.`mixin(target)`
 
 Method for defined your own styling methods:
 
@@ -299,6 +299,49 @@ log.rand.toString() // color:#f2158c;
 log.rand.toString() // color:#f60484;
 ```
 
-### log.utils
+### log.`utils`
+
+Collection of useful utility functions
+
+#### `.id(arg)`
+
+Just a placeholder - return passing value
+
+```js
+let target = {}
+expect(log.utils.id(target)).to.be(target)
+```
+
+#### `.result(arg)`
+
+If passed function, call it and return result, otherwise just return passing value
+
+```js
+let target = {}
+expect(log.utils.result(target)).to.be(target)
+expect(log.utils.result(() => { return target })).to.be(target)
+```
+
+#### `.compose(func, func[, func...])`
+
+Returns the composition of a list of functions
+
+```js
+let f = (x) => x*2
+,   g = (x) => x+2
+
+expect(log.utils.compose(f, g)(2)).to.be(8)
+expect(log.utils.compose(g, f)(2)).to.be(6)
+```
+
+#### `.extend(obj, obj[, obj...])`
+
+#### `.createStyles(styles)`
+
+#### `.parseStyles(styles)`
+
+#### `.divider(text[, symbol, length])`
+
+#### `.callout(text[, symbol])`
 
 ## Advanced Usage
