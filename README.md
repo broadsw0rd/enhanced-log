@@ -128,7 +128,41 @@ log.divider.callout('message')
 
 ### log.styles
 
+Object or function of CSS properties for styling output
+
+```js
+log.styles // {}
+
+log.code.styles // function composed() { ... }
+
+// this occurs cuz of styles inheritance
+
+log.code.styles() // {color: "#C7254E", background-color: "#F9F2F4"}
+```
+
+Please do not modify this object, use [`log.defaults`](#logdefaults) instead
+
 ### log.mapper(message)
+
+Function which modify log message before output
+
+```js
+log.divider.mapper('text') // "===================== text ====================="
+
+var success = log.success
+// Do not do this, use `log.defaults` instead
+success.mapper = function(message){ return 'Ok :: ' + message }
+
+success('text') 
+// Ok :: text
+```
+
+If you chain styling methods with mapper functions, this function will composed
+
+```js
+success.divider('text')
+// ================== Ok :: text ==================
+```
 
 ### log.api
 
@@ -192,9 +226,78 @@ Resume output to console for **each** instance of `log`, works globally too
 
 ### log.toggle([state])
 
+Toggle output to console, if `state` defined, `true` value will enable output, `false` - disable
+
+```js
+log.toggle(DEBUG) // prevent output if DEBUG === false
+```
+
 ### log.defaults
 
-### log.mixin()
+Object of default styling properties of each styling methods. Used for customizing predefined styling methods:
+
+```js
+log.defaults.code
+/*
+{
+    styles: {
+        color: "#C7254E", 
+        background-color: "#F9F2F4"
+    }
+}
+*/
+```
+
+You can simply change styles properties, mapper function or even `method` and `api` from examples above
+
+```js
+log.defaults.warning.method = 'warn'
+log.defaults.success.mapper = function(message){ return 'Ok :: ' + message }
+
+log.warning('Warning Message')
+// equal
+console.warn('%cWarning Message', 'color:#ff9800;')
+
+log.success('Success Message')
+// equal
+console.log('%cOk :: Success Message', 'color:#259b24')
+```
+
+### log.mixin(target)
+
+Method for defined your own styling methods:
+
+```js
+log.mixin({
+	muted: {
+		styles: {
+			color: '#777'
+		}
+	}
+})
+
+log.small.muted('Unimportant Message')
+// equal
+console.log('%cUnimportant Message', 'color:#777;font-size:10px;')
+```
+
+Or use styles like a function
+
+```js
+log.mixin({
+    rand: {
+        styles: function(){
+            return {
+                color: '#' + (~~(Math.random()*(1<<24))).toString(16)
+            }
+        }
+    }
+})
+
+log.rand.toString() // color:#b95c4e;
+log.rand.toString() // color:#f2158c;
+log.rand.toString() // color:#f60484;
+```
 
 ### log.utils
 
