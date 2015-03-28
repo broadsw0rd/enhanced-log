@@ -81,9 +81,9 @@ This methods very similar to CSS classes:
 - each can apply defined styles to output
 
 ```js
-log.large      // font-size:18px;
-log.info       // color:#03a9f4;
-log.large.info // color:#03a9f4;font-size:18px;
+log.large      // "font-size:18px;"
+log.info       // "color:#03a9f4;"
+log.large.info // "color:#03a9f4;font-size:18px;"
 ```
 
 - order doesn't matter
@@ -294,9 +294,9 @@ log.mixin({
     }
 })
 
-log.rand.toString() // color:#b95c4e;
-log.rand.toString() // color:#f2158c;
-log.rand.toString() // color:#f60484;
+log.rand.toString() // "color:#b95c4e;"
+log.rand.toString() // "color:#f2158c;"
+log.rand.toString() // "color:#f60484;"
 ```
 
 ### log.`utils`
@@ -334,14 +334,80 @@ expect(log.utils.compose(f, g)(2)).to.be(8)
 expect(log.utils.compose(g, f)(2)).to.be(6)
 ```
 
-#### `.extend(obj, obj[, obj...])`
+#### `.extend(target[, source...])`
+
+Canonical extend, copy all properties from the source objects to target
 
 #### `.createStyles(styles)`
 
+Convert object to valid CSS style string
+
+```js
+log.utils.createStyles({}) // ""
+log.utils.createStyles({color: 'red', padding: '20px', 'font-size': '18px'}) // "color:red;padding:20px;font-size:18px;"
+```
+
 #### `.parseStyles(styles)`
+
+Convert css style string to object
+
+```js
+log.utils.parseStyles('color:red;padding:20px;') // {color: "red", padding: "20px"}
+```
 
 #### `.divider(text[, symbol, length])`
 
+Create a divider string, support optional symbol and length arguments
+
+```js
+log.utils.divider('message')          // "==================== message ===================="
+log.utils.divider('message', '-')     // "-------------------- message --------------------"
+log.utils.divider('message', 20)      // "===== message ====="
+log.utils.divider('message', '-', 20) // "----- message -----"
+log.utils.divider('-', 20)            // "-------------------"
+log.utils.divider(20, '-')            // "-------------------"
+log.utils.divider('-')                // "-------------------------------------------------"
+log.utils.divider(20)                 // "==================="
+```
+
 #### `.callout(text[, symbol])`
 
+Create an ASCII callout
+
+```js
+log.utils.callout('message', '|') // useful for emphasize
+```
+
+    | 
+    | message
+    | 
+
 ## Advanced Usage
+
+### Create your own logger
+
+For example you want sent logs to your backend or implement DOM logger
+
+```js
+// define simple DOM logger
+var Logger = {
+    $wrapper: $('#log-wrapper'),
+    log: function(message, styles){
+    	var $logMessage = $('<span/>')
+    	$logMessage.text(message.replace('%c', ''))
+    	$logMessage[0].style.cssText = styles
+    	this.$wrapper.append($logMessage).append('<hr/>')
+    }
+}
+
+// extend `log`
+log.mixin({
+    dom: {
+        api: Logger
+    }
+})
+
+// use it
+log.dom.info('text') // will output this message with styles to #log-wrapper
+```
+
