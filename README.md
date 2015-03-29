@@ -7,7 +7,11 @@
 [![Dependency Status](https://david-dm.org/broadsw0rd/enhanced-log.svg)](https://david-dm.org/broadsw0rd/enhanced-log)
 [![devDependency Status](https://david-dm.org/broadsw0rd/enhanced-log/dev-status.svg)](https://david-dm.org/broadsw0rd/enhanced-log#info=devDependencies)
 
+- - - - - - -
+
 ## Install
+
+- - - - - - -
 
 ## Usage
 
@@ -40,6 +44,8 @@ log.large.capitalize.info('message')
 // equal
 console.log('%cmessage', 'color:#03a9f4;text-transform:capitalize;font-size:18px;')
 ```
+
+- - - - - - -
 
 ## API
 
@@ -381,6 +387,8 @@ log.utils.callout('message', '|') // useful for emphasize
     | 
     | message
     | 
+
+- - - - - - -
 
 ## Advanced Usage
 
