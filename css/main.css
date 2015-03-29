@@ -20,9 +20,12 @@ body {
     color: #FFEB3B;
 }
 
+.navbar.black .nav.yellow a:focus{
+	background-color: #212121;
+}
+
 .navbar.black .nav.yellow a:hover,
-.navbar.black .nav.yellow a:active,
-.navbar.black .nav.yellow a:focus {
+.navbar.black .nav.yellow a:active {
     background-color: #FFEB3B;
     color: #212121;
 }
