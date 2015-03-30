@@ -4,12 +4,16 @@
 
 [![Build Status](https://travis-ci.org/broadsw0rd/enhanced-log.svg?branch=master)](https://travis-ci.org/broadsw0rd/enhanced-log)
 [![Coverage Status](https://coveralls.io/repos/broadsw0rd/enhanced-log/badge.svg)](https://coveralls.io/r/broadsw0rd/enhanced-log)
-[![Dependency Status](https://david-dm.org/broadsw0rd/enhanced-log.svg)](https://david-dm.org/broadsw0rd/enhanced-log)
-[![devDependency Status](https://david-dm.org/broadsw0rd/enhanced-log/dev-status.svg)](https://david-dm.org/broadsw0rd/enhanced-log#info=devDependencies)
 
 - - - - - - -
 
 ## Install
+
+```
+$ npm install --save enhanced-log
+```
+
+Or just download [dev](http://broadsw0rd.github.io/enhanced-log/src/log.js) or [prod](http://broadsw0rd.github.io/enhanced-log/dist/log.min.js) version
 
 - - - - - - -
 
