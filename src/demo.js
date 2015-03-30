@@ -89,6 +89,10 @@ log.callout.muted('Amazing, flexible, extendable library for enhance styling con
 log.muted(defaultDivider)
 
 log.huge('Install')
+logPre('%c$ npm install --save enhanced-log', [log])
+log('Or just download')
+log.info('dev: http://broadsw0rd.github.io/enhanced-log/src/log.js')
+log.info('prod: http://broadsw0rd.github.io/enhanced-log/dist/log.min.js')
 log.muted(defaultDivider)
 
 log.huge('Usage')
