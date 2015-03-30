@@ -4,6 +4,7 @@
 
 [![Build Status](https://travis-ci.org/broadsw0rd/enhanced-log.svg?branch=master)](https://travis-ci.org/broadsw0rd/enhanced-log)
 [![Coverage Status](https://coveralls.io/repos/broadsw0rd/enhanced-log/badge.svg)](https://coveralls.io/r/broadsw0rd/enhanced-log)
+[![NPM version](https://img.shields.io/npm/v/enhanced-log.svg)](https://www.npmjs.com/package/enhanced-log)
 
 - - - - - - -
 
