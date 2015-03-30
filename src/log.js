@@ -262,6 +262,7 @@
                 styles: {
                     'color': '#C7254E'
                 ,   'background-color': '#F9F2F4'
+                ,   'padding': '0 4px'
                 }
             }
 

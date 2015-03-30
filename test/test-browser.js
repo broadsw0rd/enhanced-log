@@ -9737,7 +9737,8 @@ exports.install = function install(target, now, toFake) {
         , code: {
             styles: {
                 color: "#C7254E",
-                "background-color": "#F9F2F4"
+                "background-color": "#F9F2F4",
+                padding: "0 4px"
             }
         }
 
