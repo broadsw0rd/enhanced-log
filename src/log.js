@@ -23,10 +23,10 @@
     }
 
     function _inherit(parent, child){
-        return LogFactory(_extend(Object.create(parent), child, {
+        return _extend(Object.create(parent), child, {
                     styles: _compose(_spreadExtend, _map.bind([{}, parent.styles, child.styles || {}], _result))
                 ,   mapper: _compose(child.mapper || _id, parent.mapper)
-                }))
+                })
     }
 
     // -------------------------------------
@@ -161,7 +161,15 @@
 
         function log(message){
             'use strict';
-            _log(message, log)
+            if(this == global || this == void 0 || this instanceof LogFactory){
+                _log(message, log)
+            }
+            else if(this instanceof log){
+                // TODO: correct work when call like constructor `new log()`
+            }
+            else {
+                _log(message, _inherit(log, this))
+            }
         }
 
         log[__proto__] = base
@@ -300,7 +308,7 @@
             !function (name, value){
                 proto.defaults[name] = value
                 source[name] = {
-                    get: function(){ return _inherit(this, value) }
+                    get: function(){ return LogFactory(_inherit(this, value)) }
                 ,   configurable: true
                 }
             }(prop, target[prop])
@@ -322,6 +330,7 @@
         ,   off: function (){ enabled = false }
         ,   toggle: function (enable){ enabled = enable !== void 0 ? enable : !enabled }
         ,   constructor: LogFactory
+        ,   __esModule: true
         })
 
     mixin(defaults)

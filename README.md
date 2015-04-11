@@ -32,6 +32,13 @@ Browser:
 <script src="log.min.js">
 ```
 
+ES6:
+
+```js
+import * as log from 'log.min.js'
+
+```
+
 `log` has several chainable methods for styling your console output:
 
 ```js
@@ -403,7 +410,7 @@ For example you want sent logs to your backend or implement DOM logger
 
 ```js
 // define simple DOM logger
-var Logger = {
+var DOMLoggerApi = {
     $wrapper: $('#log-wrapper'),
     log: function(message, styles){
     	var $logMessage = $('<span/>')
@@ -416,11 +423,37 @@ var Logger = {
 // extend `log`
 log.mixin({
     dom: {
-        api: Logger
+        api: DOMLoggerApi
     }
 })
 
 // use it
 log.dom.info('text') // will output this message with styles to #log-wrapper
+```
+
+### Taking advantage of the fact that `log` is function
+
+```js
+log instanceof Function // true
+```
+
+That means you can use `.call`, `.apply` and `.bind` for calling `log` with different context.
+
+`log` is smart, so it will use passed context like a custom logger.
+
+For example DOMLoggerApi from example above can be used as follows:
+
+```js
+var DOMLogger = { api: DOMLoggerApi }
+
+log.info.call(DOMLogger, 'text')
+
+log.info.apply(DOMLogger, 'text')
+
+log.info.bind(DOMLogger, 'text')()
+
+DOMLogger.log = log.info
+DOMLogger.log('text')
+
 ```
 

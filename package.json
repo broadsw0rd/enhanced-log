@@ -44,8 +44,8 @@
   "scripts": {
     "build": "uglifyjs -c -m -- src/log.js > dist/log.min.js",
     "lint": "jshint --reporter node_modules/jshint-stylish/stylish.js src/log.js",
-    "test": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- --compilers js:babel/register -R spec test/test.js",
-    "test-browser": "browserify test/test.js -t babelify -o test/test-browser.js",
+    "test": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- --compilers js:./babelhook -R spec test/test.js",
+    "test-browser": "browserify test/test.js -t [ babelify --modules commonStrict ] -o test/test-browser.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "dependencies": {}

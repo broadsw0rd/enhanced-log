@@ -1,6 +1,6 @@
-import expect from 'expect.js'
-import sinon from 'sinon'
-import log from '../src/log.js'
+import * as expect from 'expect.js'
+import * as sinon from 'sinon'
+import * as log from '../src/log.js'
 
 let defaults = [
         'large'
@@ -101,6 +101,80 @@ describe('log', () => {
 
         it('should correct override css properties', () => {
             expect(log.small.large.huge.toString()).to.be(log.huge.toString())
+        })
+    })
+
+    describe('should correct work with custom context', () => {
+        let customLogger = {
+                styles: {
+                    border: '1px solid red'
+                }
+            ,   mapper: (message) => `(${message})`
+            ,   method: 'warn'
+            ,   api: console
+            }
+
+        beforeEach(() => {
+            sinon.spy(customLogger.api, 'warn')
+        })
+
+        afterEach(() => {
+            customLogger.api.warn.restore()
+        })
+
+        it('.call should call log instance with custom logger like a context', () => {
+            log.call(customLogger, 'message')
+            expect(customLogger.api.warn.calledOnce).to.be.ok()
+            expect(customLogger.api.warn.getCall(0).args[0]).to.be('%c(message)')
+            expect(customLogger.api.warn.getCall(0).args[1]).to.be(log.utils.createStyles(customLogger.styles))
+
+            log.large.warning.call(customLogger, 'message')
+            expect(customLogger.api.warn.calledTwice).to.be.ok()
+            expect(customLogger.api.warn.getCall(1).args[0]).to.be('%c(message)')
+            expect(customLogger.api.warn.getCall(1).args[1]).to.be(log.utils.createStyles(log.utils.extend({}, log.large.warning.styles(), customLogger.styles)))
+        })
+
+        it('.apply should call log instance with custom logger like a context', () => {
+            log.apply(customLogger, ['message'])
+            expect(customLogger.api.warn.calledOnce).to.be.ok()
+            expect(customLogger.api.warn.getCall(0).args[0]).to.be('%c(message)')
+            expect(customLogger.api.warn.getCall(0).args[1]).to.be(log.utils.createStyles(customLogger.styles))
+
+            log.large.warning.apply(customLogger, ['message'])
+            expect(customLogger.api.warn.calledTwice).to.be.ok()
+            expect(customLogger.api.warn.getCall(1).args[0]).to.be('%c(message)')
+            expect(customLogger.api.warn.getCall(1).args[1]).to.be(log.utils.createStyles(log.utils.extend({}, log.large.warning.styles(), customLogger.styles)))
+        })
+
+        it('.bind should return log instance bounded to custom logger like a context', () => {
+            let customLog = log.bind(customLogger, 'message')
+            customLog()
+            expect(customLogger.api.warn.calledOnce).to.be.ok()
+            expect(customLogger.api.warn.getCall(0).args[0]).to.be('%c(message)')
+            expect(customLogger.api.warn.getCall(0).args[1]).to.be(log.utils.createStyles(customLogger.styles))
+
+            customLog = log.large.warning.bind(customLogger, 'message')
+            customLog()
+            expect(customLogger.api.warn.calledTwice).to.be.ok()
+            expect(customLogger.api.warn.getCall(1).args[0]).to.be('%c(message)')
+            expect(customLogger.api.warn.getCall(1).args[1]).to.be(log.utils.createStyles(log.utils.extend({}, log.large.warning.styles(), customLogger.styles)))
+        })
+
+        describe('when log instance is a property of some object', () => {
+            it('should use this object like a custom logger', () => {
+                customLogger.log = log
+
+                customLogger.log('message')
+                expect(customLogger.api.warn.calledOnce).to.be.ok()
+                expect(customLogger.api.warn.getCall(0).args[0]).to.be('%c(message)')
+                expect(customLogger.api.warn.getCall(0).args[1]).to.be(log.utils.createStyles(customLogger.styles))
+
+                customLogger.log = log.large.warning
+                customLogger.log('message')
+                expect(customLogger.api.warn.calledTwice).to.be.ok()
+                expect(customLogger.api.warn.getCall(1).args[0]).to.be('%c(message)')
+                expect(customLogger.api.warn.getCall(1).args[1]).to.be(log.utils.createStyles(log.utils.extend({}, log.large.warning.styles(), customLogger.styles)))
+            })
         })
     })
 
