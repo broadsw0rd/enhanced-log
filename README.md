@@ -453,7 +453,7 @@ var DOMLogger = { api: DOMLoggerApi }
 
 log.info.call(DOMLogger, 'text')
 
-log.info.apply(DOMLogger, 'text')
+log.info.apply(DOMLogger, ['text'])
 
 log.info.bind(DOMLogger, 'text')()
 
