@@ -14,6 +14,10 @@
 $ npm install --save enhanced-log
 ```
 
+```
+$ bower install --save enhanced-log
+```
+
 Or just download [dev](http://broadsw0rd.github.io/enhanced-log/src/log.js) or [prod](http://broadsw0rd.github.io/enhanced-log/dist/log.min.js) version
 
 - - - - - - -
