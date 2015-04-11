@@ -7,6 +7,17 @@
   ],
   "description": "Make your console.log more sexy",
   "main": "dist/log.min.js",
+  "ignore": [
+    "/.*",
+    "test",
+    "libs",
+    "fonts",
+    "css",
+    "src/demo.js",
+    "babelhook.js",
+    "index.html",
+    "tests.html"
+  ],
   "keywords": [
     "log",
     "console.log",
