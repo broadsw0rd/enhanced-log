@@ -305,15 +305,21 @@
 
     function mixin(target){
         var source = {}
-        for(var prop in target){
-            ;(function (name, value){
-                proto.defaults[name] = value
-                source[name] = {
-                    get: function(){ return LogFactory(_inherit(this, value)) }
+
+        function _loop(name, value){
+            proto.defaults[name] = value
+            source[name] = {
+                    get: function get(){ 
+                        return LogFactory(_inherit(this, value)) 
+                    }
                 ,   configurable: true
                 }
-            }(prop, target[prop]))
         }
+
+        for(var prop in target){
+            _loop(prop, target[prop])
+        }
+
         Object.defineProperties(proto, source)
     }
 
