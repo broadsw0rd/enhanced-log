@@ -4,6 +4,7 @@
 
 [![Build Status](https://travis-ci.org/broadsw0rd/enhanced-log.svg?branch=master)](https://travis-ci.org/broadsw0rd/enhanced-log)
 [![Coverage Status](https://coveralls.io/repos/broadsw0rd/enhanced-log/badge.svg)](https://coveralls.io/r/broadsw0rd/enhanced-log)
+[![Code Climate](https://codeclimate.com/github/broadsw0rd/enhanced-log/badges/gpa.svg)](https://codeclimate.com/github/broadsw0rd/enhanced-log)
 [![NPM version](https://img.shields.io/npm/v/enhanced-log.svg)](https://www.npmjs.com/package/enhanced-log)
 ![Bower version](https://img.shields.io/bower/v/enhanced-log.svg)
 
