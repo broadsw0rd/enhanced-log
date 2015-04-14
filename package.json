@@ -35,12 +35,6 @@
     "jshint": "latest",
     "jshint-stylish": "latest"
   },
-  "jshintConfig": {
-    "asi": true,
-    "laxcomma": true,
-    "laxbreak": true,
-    "shadow": true
-  },
   "scripts": {
     "build": "uglifyjs -c -m -- src/log.js > dist/log.min.js",
     "lint": "jshint --reporter node_modules/jshint-stylish/stylish.js src/log.js",
