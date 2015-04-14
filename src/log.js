@@ -75,7 +75,8 @@
     function _parseStyles(styles){
         return styles.replace(/;$/, '').split(';').reduce(function (acc, style){
             if(style) {
-                acc[style = style.split(':'), style[0].trim()] = style[1].trim()
+                style = style.split(':')
+                acc[style[0].trim()] = style[1].trim()
             }
             return acc
         }, {})
@@ -305,13 +306,13 @@
     function mixin(target){
         var source = {}
         for(var prop in target){
-            !function (name, value){
+            ;(function (name, value){
                 proto.defaults[name] = value
                 source[name] = {
                     get: function(){ return LogFactory(_inherit(this, value)) }
                 ,   configurable: true
                 }
-            }(prop, target[prop])
+            }(prop, target[prop]))
         }
         Object.defineProperties(proto, source)
     }
