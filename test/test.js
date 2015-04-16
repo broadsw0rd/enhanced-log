@@ -496,22 +496,38 @@ describe('log', () => {
             })
 
             it('should create divider string', () => {
-                expect(log.utils.divider()).to.be('=================================================')
+                expect(log.utils.divider()).to.be('==================================================')
+                expect(log.utils.divider().length).to.be(50)
             })
             it('should support optional message, symbol and length', () => {
-                expect(log.utils.divider('message')).to.be('==================== message ====================')
-                expect(log.utils.divider('message', '-')).to.be('-------------------- message --------------------')
-                expect(log.utils.divider('message', 20)).to.be('===== message =====')
-                expect(log.utils.divider('message', '-', 20)).to.be('----- message -----')
-                expect(log.utils.divider('-', 20)).to.be('-------------------')
-                expect(log.utils.divider(20, '-')).to.be('-------------------')
-                expect(log.utils.divider('-')).to.be('-------------------------------------------------')
-                expect(log.utils.divider(20)).to.be('===================')
+                expect(log.utils.divider('message')).to.be('===================== message =====================')
+                expect(log.utils.divider('message').length).to.be(51)
+
+                expect(log.utils.divider('message', '-')).to.be('--------------------- message ---------------------')
+                expect(log.utils.divider('message', '-').length).to.be(51)
+
+                expect(log.utils.divider('message', 20)).to.be('====== message ======')
+                expect(log.utils.divider('message', 20).length).to.be(21)
+
+                expect(log.utils.divider('message', '-', 20)).to.be('------ message ------')
+                expect(log.utils.divider('message', '-', 20).length).to.be(21)
+
+                expect(log.utils.divider('-', 20)).to.be('--------------------')
+                expect(log.utils.divider('-', 20).length).to.be(20)
+
+                expect(log.utils.divider(20, '-')).to.be('--------------------')
+                expect(log.utils.divider(20, '-').length).to.be(20)
+
+                expect(log.utils.divider('-')).to.be('--------------------------------------------------')
+                expect(log.utils.divider('-').length).to.be(50)
+
+                expect(log.utils.divider(20)).to.be('====================')
+                expect(log.utils.divider(20).length).to.be(20)
             })
             it('should works well with multiline message', () => {
-                expect(log.utils.divider('message\nmessage')).to.be('==================== message ====================\n==================== message ====================')
-                expect(log.utils.divider('message\r\nmessage')).to.be('==================== message ====================\n==================== message ====================')
-                expect(log.utils.divider('message\n\rmessage')).to.be('==================== message ====================\n==================== message ====================')
+                expect(log.utils.divider('message\nmessage')).to.be('===================== message =====================\n===================== message =====================')
+                expect(log.utils.divider('message\r\nmessage')).to.be('===================== message =====================\n===================== message =====================')
+                expect(log.utils.divider('message\n\rmessage')).to.be('===================== message =====================\n===================== message =====================')
             })
         })
 
@@ -521,17 +537,95 @@ describe('log', () => {
             })
 
             it('should create ASCII callout', () => {
-                expect(log.utils.callout('callout')).to.be(['\t▌','\t▌ callout','\t▌'].join('\r\n'))
+                expect(log.utils.callout('callout')).to.be(['\t▌','\t▌ callout','\t▌'].join('\n'))
             })
 
             it('should support optional symbol', () => {
-                expect(log.utils.callout('callout', '|')).to.be(['\t|','\t| callout','\t|'].join('\r\n'))
+                expect(log.utils.callout('callout', '|')).to.be(['\t|','\t| callout','\t|'].join('\n'))
             })
 
             it('should works well with multiline message', () => {
-                expect(log.utils.callout('callout\ncallout')).to.be(['\t▌','\t▌ callout','\t▌ callout','\t▌'].join('\r\n'))
-                expect(log.utils.callout('callout\r\ncallout')).to.be(['\t▌','\t▌ callout','\t▌ callout','\t▌'].join('\r\n'))
-                expect(log.utils.callout('callout\n\rcallout')).to.be(['\t▌','\t▌ callout','\t▌ callout','\t▌'].join('\r\n'))
+                expect(log.utils.callout('callout\ncallout')).to.be(['\t▌','\t▌ callout','\t▌ callout','\t▌'].join('\n'))
+                expect(log.utils.callout('callout\r\ncallout')).to.be(['\t▌','\t▌ callout','\t▌ callout','\t▌'].join('\n'))
+                expect(log.utils.callout('callout\n\rcallout')).to.be(['\t▌','\t▌ callout','\t▌ callout','\t▌'].join('\n'))
+            })
+        })
+
+        describe('.box()', () => {
+            it('should be a function', () => {
+                expect(log.utils.box).to.be.a(Function)
+            })
+
+            it('should create ASCII box', () => {
+                expect(log.utils.box('message'))
+                    .to.be('\t' + [
+                        '*************'
+                    ,   '*           *'
+                    ,   '*  message  *'
+                    ,   '*           *'
+                    ,   '*************'
+                    ].join('\n\t'))
+            })
+
+            it('should support optional symbol and padding object', () => {
+                expect(log.utils.box('message', '#'))
+                    .to.be('\t' + [
+                        '#############'
+                    ,   '#           #'
+                    ,   '#  message  #'
+                    ,   '#           #'
+                    ,   '#############'
+                    ].join('\n\t'))
+
+                let padding = {
+                        top: 2,
+                        bottom: 2,
+                        left: 3,
+                        right: 3
+                    }
+
+                expect(log.utils.box('message', padding))
+                    .to.be('\t' + [
+                        '***************'
+                    ,   '*             *'
+                    ,   '*             *'
+                    ,   '*   message   *'
+                    ,   '*             *'
+                    ,   '*             *'
+                    ,   '***************'
+                    ].join('\n\t'))
+
+                expect(log.utils.box('message', '#', padding))
+                    .to.be('\t' + [
+                        '###############'
+                    ,   '#             #'
+                    ,   '#             #'
+                    ,   '#   message   #'
+                    ,   '#             #'
+                    ,   '#             #'
+                    ,   '###############'
+                    ].join('\n\t'))
+
+                expect(log.utils.box('message', { left: 1, right: 1 }))
+                    .to.be('\t' + [
+                        '***********'
+                    ,   '*         *'
+                    ,   '* message *'
+                    ,   '*         *'
+                    ,   '***********'
+                    ].join('\n\t'))
+            })
+
+            it('should works well with multiline message', () => {
+                expect(log.utils.box('message\ntext'))
+                    .to.be('\t' + [
+                        '*************'
+                    ,   '*           *'
+                    ,   '*  message  *'
+                    ,   '*  text     *'
+                    ,   '*           *'
+                    ,   '*************'
+                    ].join('\n\t'))
             })
         })
     })

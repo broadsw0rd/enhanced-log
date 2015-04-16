@@ -10,39 +10,14 @@
 
 - - - - - - -
 
-## Table of Contents
-
-* [Enhanced Log](#enhanced-log)
-  * [Table of Contents](#table-of-contents)
-  * [Install](#install)
-  * [Usage](#usage)
-  * [API](#api)
-    * [log.`<style>[.<style>...](message)`](#logstylestylemessage)
-      * [Few words about `callout` and `divider`](#few-words-about-callout-and-divider)
-    * [log.`styles`](#logstyles)
-    * [log.`mapper(message)`](#logmappermessage)
-    * [log.`api`](#logapi)
-    * [log.`method`](#logmethod)
-    * [log.`toString()`](#logtostring)
-    * [log.`toJSON()`](#logtojson)
-    * [log.`off()`](#logoff)
-    * [log.`on()`](#logon)
-    * [log.`toggle([state])`](#logtogglestate)
-    * [log.`defaults`](#logdefaults)
-    * [log.`mixin(target)`](#logmixintarget)
-    * [log.`utils`](#logutils)
-  * [Advanced Usage](#advanced-usage)
-    * [Create your own logger](#create-your-own-logger)
-    * [Taking advantage of the fact that `log` is function](#taking-advantage-of-the-fact-that-log-is-function)
-
 ## Install
 
 ```
-$ npm install enhanced-log
+$ npm install --save enhanced-log
 ```
 
 ```
-$ bower install enhanced-log
+$ bower install --save enhanced-log
 ```
 
 Or just download [dev](http://broadsw0rd.github.io/enhanced-log/src/log.js) or [prod](http://broadsw0rd.github.io/enhanced-log/dist/log.min.js) version
@@ -430,6 +405,31 @@ log.utils.callout('message', '|') // useful for emphasize
     | 
     | message
     | 
+
+#### `.box(text[, symbol, padding])`
+
+Create an ASCII box, support optional symbol and padding arguments
+
+```js
+log.utils.box('message')
+```
+
+    *************
+    *           *
+    *  message  *
+    *           *
+    *************
+
+```js
+log.utils.box('multiline\nmessage', '#', { left: 3, right: 3 })
+```
+
+    #################
+    #               #
+    #   multiline   #
+    #   message     #
+    #               #
+    #################
 
 - - - - - - -
 

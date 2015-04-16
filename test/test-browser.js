@@ -9557,7 +9557,8 @@ exports.install = function install(target, now, toFake) {
     function _parseStyles(styles) {
         return styles.replace(/;$/, '').split(';').reduce(function (acc, style) {
             if (style) {
-                acc[(style = style.split(':'), style[0].trim())] = style[1].trim();
+                style = style.split(':');
+                acc[style[0].trim()] = style[1].trim();
             }
             return acc;
         }, {});
@@ -9591,20 +9592,16 @@ exports.install = function install(target, now, toFake) {
                 length = symbol;
                 symbol = DEFAULT_DIVIDER_SYMBOL;
             }
-            if (/\n/.test(text)) {
-                return text.replace('\r', '').split('\n').map(function (text) {
-                    return _divider(text, symbol, length);
-                }).join('\n');
-            } else {
-                length = Math.ceil((length - (text.length + 2)) / 2);
 
-                var start = Array(length).join(symbol),
-                    end = Array(length).join(symbol);
+            return text.replace('\r', '').split('\n').map(function (text) {
+                var len = Math.ceil((length - (text.length + 2)) / 2),
+                    start = Array(len + 1).join(symbol),
+                    end = Array(len + 1).join(symbol);
 
                 return [start, text, end].join(' ');
-            }
+            }).join('\n');
         } else {
-            return Array(length).join(symbol);
+            return Array(length + 1).join(symbol);
         }
     }
 
@@ -9616,13 +9613,57 @@ exports.install = function install(target, now, toFake) {
 
     function _callout(message, symbol) {
         symbol = symbol || DEFAULT_CALLOUT_SYMBOL;
-        if (/\n/.test(message)) {
-            return ['\t' + symbol, message.replace('\r', '').split('\n').map(function (message) {
-                return '\t' + symbol + ' ' + message;
-            }).join('\r\n'), '\t' + symbol].join('\r\n');
-        } else {
-            return ['\t' + symbol, '\t' + symbol + ' ' + message, '\t' + symbol].join('\r\n');
+
+        message = message.replace('\r', '').split('\n').map(function (message) {
+            return symbol + ' ' + message;
+        }).join('\n\t');
+
+        return ['\t' + symbol, '\t' + message, '\t' + symbol].join('\n');
+    }
+
+    // -------------------------------------
+    // Callout
+    // -------------------------------------
+
+    var DEFAULT_BOX_SYMBOL = '*',
+        DEFAULT_BOX_PADDING = {
+        top: 1,
+        right: 2,
+        bottom: 1,
+        left: 2
+    };
+
+    function _box(message, symbol, padding) {
+        symbol = symbol || DEFAULT_BOX_SYMBOL;
+
+        if (typeof symbol == 'object') {
+            padding = symbol;
+            symbol = DEFAULT_BOX_SYMBOL;
         }
+
+        padding = _extend({}, DEFAULT_BOX_PADDING, padding || {});
+
+        var messages = message.replace('\r', '').split('\n'),
+            longestMessage = messages.reduce(function (a, b) {
+            return a.length > b.length ? a : b;
+        }),
+            leftPadding = Array(padding.left + 1).join(' '),
+            rightPadding = Array(padding.right + 1).join(' '),
+            emptyRow = Array(longestMessage.length + 1).join(' '),
+            horisontalBorder = Array(longestMessage.length + padding.left + padding.right + 3).join(symbol),
+            topSpace = Array.apply(null, { length: padding.top }).map(function () {
+            return symbol + leftPadding + emptyRow + rightPadding + symbol;
+        }).join('\n\t'),
+            bottomSpace = Array.apply(null, { length: padding.bottom }).map(function () {
+            return symbol + leftPadding + emptyRow + rightPadding + symbol;
+        }).join('\n\t');
+
+        messages = messages.map(function (message) {
+            var postfix = Array(longestMessage.length - message.length + 1).join(' ');
+            return symbol + leftPadding + message + postfix + rightPadding + symbol;
+        }).join('\n\t');
+
+        return ['\t' + horisontalBorder, '\t' + topSpace, '\t' + messages, '\t' + bottomSpace, '\t' + horisontalBorder].join('\n');
     }
 
     // =====================================
@@ -9658,7 +9699,8 @@ exports.install = function install(target, now, toFake) {
         createStyles: _createStyles,
         parseStyles: _parseStyles,
         divider: _divider,
-        callout: _callout
+        callout: _callout,
+        box: _box
     };
 
     var defaults = {
@@ -9773,17 +9815,21 @@ exports.install = function install(target, now, toFake) {
 
     function mixin(target) {
         var source = {};
-        for (var prop in target) {
-            !(function (name, value) {
-                proto.defaults[name] = value;
-                source[name] = {
-                    get: function get() {
-                        return LogFactory(_inherit(this, value));
-                    },
-                    configurable: true
-                };
-            })(prop, target[prop]);
+
+        function _loop(name, value) {
+            proto.defaults[name] = value;
+            source[name] = {
+                get: function get() {
+                    return LogFactory(_inherit(this, value));
+                },
+                configurable: true
+            };
         }
+
+        for (var prop in target) {
+            _loop(prop, target[prop]);
+        }
+
         Object.defineProperties(proto, source);
     }
 
@@ -10340,22 +10386,38 @@ describe('log', function () {
             });
 
             it('should create divider string', function () {
-                expect(log.utils.divider()).to.be('=================================================');
+                expect(log.utils.divider()).to.be('==================================================');
+                expect(log.utils.divider().length).to.be(50);
             });
             it('should support optional message, symbol and length', function () {
-                expect(log.utils.divider('message')).to.be('==================== message ====================');
-                expect(log.utils.divider('message', '-')).to.be('-------------------- message --------------------');
-                expect(log.utils.divider('message', 20)).to.be('===== message =====');
-                expect(log.utils.divider('message', '-', 20)).to.be('----- message -----');
-                expect(log.utils.divider('-', 20)).to.be('-------------------');
-                expect(log.utils.divider(20, '-')).to.be('-------------------');
-                expect(log.utils.divider('-')).to.be('-------------------------------------------------');
-                expect(log.utils.divider(20)).to.be('===================');
+                expect(log.utils.divider('message')).to.be('===================== message =====================');
+                expect(log.utils.divider('message').length).to.be(51);
+
+                expect(log.utils.divider('message', '-')).to.be('--------------------- message ---------------------');
+                expect(log.utils.divider('message', '-').length).to.be(51);
+
+                expect(log.utils.divider('message', 20)).to.be('====== message ======');
+                expect(log.utils.divider('message', 20).length).to.be(21);
+
+                expect(log.utils.divider('message', '-', 20)).to.be('------ message ------');
+                expect(log.utils.divider('message', '-', 20).length).to.be(21);
+
+                expect(log.utils.divider('-', 20)).to.be('--------------------');
+                expect(log.utils.divider('-', 20).length).to.be(20);
+
+                expect(log.utils.divider(20, '-')).to.be('--------------------');
+                expect(log.utils.divider(20, '-').length).to.be(20);
+
+                expect(log.utils.divider('-')).to.be('--------------------------------------------------');
+                expect(log.utils.divider('-').length).to.be(50);
+
+                expect(log.utils.divider(20)).to.be('====================');
+                expect(log.utils.divider(20).length).to.be(20);
             });
             it('should works well with multiline message', function () {
-                expect(log.utils.divider('message\nmessage')).to.be('==================== message ====================\n==================== message ====================');
-                expect(log.utils.divider('message\r\nmessage')).to.be('==================== message ====================\n==================== message ====================');
-                expect(log.utils.divider('message\n\rmessage')).to.be('==================== message ====================\n==================== message ====================');
+                expect(log.utils.divider('message\nmessage')).to.be('===================== message =====================\n===================== message =====================');
+                expect(log.utils.divider('message\r\nmessage')).to.be('===================== message =====================\n===================== message =====================');
+                expect(log.utils.divider('message\n\rmessage')).to.be('===================== message =====================\n===================== message =====================');
             });
         });
 
@@ -10365,17 +10427,48 @@ describe('log', function () {
             });
 
             it('should create ASCII callout', function () {
-                expect(log.utils.callout('callout')).to.be(['\t▌', '\t▌ callout', '\t▌'].join('\r\n'));
+                expect(log.utils.callout('callout')).to.be(['\t▌', '\t▌ callout', '\t▌'].join('\n'));
             });
 
             it('should support optional symbol', function () {
-                expect(log.utils.callout('callout', '|')).to.be(['\t|', '\t| callout', '\t|'].join('\r\n'));
+                expect(log.utils.callout('callout', '|')).to.be(['\t|', '\t| callout', '\t|'].join('\n'));
             });
 
             it('should works well with multiline message', function () {
-                expect(log.utils.callout('callout\ncallout')).to.be(['\t▌', '\t▌ callout', '\t▌ callout', '\t▌'].join('\r\n'));
-                expect(log.utils.callout('callout\r\ncallout')).to.be(['\t▌', '\t▌ callout', '\t▌ callout', '\t▌'].join('\r\n'));
-                expect(log.utils.callout('callout\n\rcallout')).to.be(['\t▌', '\t▌ callout', '\t▌ callout', '\t▌'].join('\r\n'));
+                expect(log.utils.callout('callout\ncallout')).to.be(['\t▌', '\t▌ callout', '\t▌ callout', '\t▌'].join('\n'));
+                expect(log.utils.callout('callout\r\ncallout')).to.be(['\t▌', '\t▌ callout', '\t▌ callout', '\t▌'].join('\n'));
+                expect(log.utils.callout('callout\n\rcallout')).to.be(['\t▌', '\t▌ callout', '\t▌ callout', '\t▌'].join('\n'));
+            });
+        });
+
+        describe('.box()', function () {
+            it('should be a function', function () {
+                expect(log.utils.box).to.be.a(Function);
+            });
+
+            it('should create ASCII box', function () {
+                expect(log.utils.box('message')).to.be('\t' + ['*************', '*           *', '*  message  *', '*           *', '*************'].join('\n\t'));
+            });
+
+            it('should support optional symbol and padding object', function () {
+                expect(log.utils.box('message', '#')).to.be('\t' + ['#############', '#           #', '#  message  #', '#           #', '#############'].join('\n\t'));
+
+                var padding = {
+                    top: 2,
+                    bottom: 2,
+                    left: 3,
+                    right: 3
+                };
+
+                expect(log.utils.box('message', padding)).to.be('\t' + ['***************', '*             *', '*             *', '*   message   *', '*             *', '*             *', '***************'].join('\n\t'));
+
+                expect(log.utils.box('message', '#', padding)).to.be('\t' + ['###############', '#             #', '#             #', '#   message   #', '#             #', '#             #', '###############'].join('\n\t'));
+
+                expect(log.utils.box('message', { left: 1, right: 1 })).to.be('\t' + ['***********', '*         *', '* message *', '*         *', '***********'].join('\n\t'));
+            });
+
+            it('should works well with multiline message', function () {
+                expect(log.utils.box('message\ntext')).to.be('\t' + ['*************', '*           *', '*  message  *', '*  text     *', '*           *', '*************'].join('\n\t'));
             });
         });
     });

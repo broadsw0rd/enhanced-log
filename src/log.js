@@ -110,22 +110,17 @@
                 length = symbol
                 symbol = DEFAULT_DIVIDER_SYMBOL
             }
-            if(/\n/.test(text)){
-                return text.replace('\r', '').split('\n').map(function (text){
-                    return _divider(text, symbol, length)
+
+            return text.replace('\r', '').split('\n').map(function (text){
+                    var len = Math.ceil((length - (text.length + 2)) / 2)
+                    ,   start = Array(len + 1).join(symbol)
+                    ,   end = Array(len + 1).join(symbol)
+
+                    return [start, text, end].join(' ') 
                 }).join('\n')
-            }
-            else {
-                length = Math.ceil((length - (text.length + 2)) / 2)
-                
-                var start = Array(length).join(symbol)
-                ,   end = Array(length).join(symbol)
- 
-                return [start, text, end].join(' ')                
-            }
         }
         else {
-            return Array(length).join(symbol)
+            return Array(length + 1).join(symbol)
         }
     }
 
@@ -137,20 +132,72 @@
  
     function _callout(message, symbol){
         symbol = symbol || DEFAULT_CALLOUT_SYMBOL
-        if(/\n/.test(message)){
-            return [
-                    '\t' + symbol
-                ,   message.replace('\r', '').split('\n').map(function (message){ return '\t' + symbol + ' ' + message }).join('\r\n')
-                ,   '\t' + symbol
-                ].join('\r\n')
+
+        message = message.replace('\r', '').split('\n').map(function (message){ 
+                return symbol + ' ' + message 
+            }).join('\n\t')
+
+        return [
+                '\t' + symbol
+            ,   '\t' + message
+            ,   '\t' + symbol
+            ].join('\n')
+    }
+
+    // -------------------------------------
+    // Callout
+    // -------------------------------------
+
+    var DEFAULT_BOX_SYMBOL = '*'
+    ,   DEFAULT_BOX_PADDING = {
+            top: 1
+        ,   right: 2
+        ,   bottom: 1
+        ,   left: 2
         }
-        else {            
-            return [
-                    '\t' + symbol
-                ,   '\t' + symbol + ' ' + message
-                ,   '\t' + symbol
-                ].join('\r\n')
+
+    function _box(message, symbol, padding){
+        symbol = symbol || DEFAULT_BOX_SYMBOL
+
+        if(typeof symbol == 'object'){
+            padding = symbol
+            symbol = DEFAULT_BOX_SYMBOL
         }
+
+        padding = _extend({}, DEFAULT_BOX_PADDING, padding || {})
+
+        var messages = message.replace('\r', '').split('\n')
+
+        ,   longestMessage = messages.reduce(function (a, b) { return a.length > b.length ? a : b })
+
+        ,   leftPadding = Array(padding.left + 1).join(' ')
+
+        ,   rightPadding = Array(padding.right + 1).join(' ')
+
+        ,   emptyRow = Array(longestMessage.length + 1).join(' ')
+
+        ,   horisontalBorder = Array(longestMessage.length + padding.left + padding.right + 3).join(symbol)
+
+        ,   topSpace = Array.apply(null, { length : padding.top }).map(function(){
+                    return symbol + leftPadding + emptyRow + rightPadding + symbol
+                }).join('\n\t')
+
+        ,   bottomSpace = Array.apply(null, { length : padding.bottom }).map(function(){
+                    return symbol + leftPadding + emptyRow + rightPadding + symbol
+                }).join('\n\t')
+
+        messages = messages.map(function (message){
+                var postfix = Array(longestMessage.length - message.length + 1).join(' ')
+                return symbol + leftPadding + message + postfix + rightPadding + symbol
+            }).join('\n\t')
+
+        return [
+                '\t' + horisontalBorder
+            ,   '\t' + topSpace
+            ,   '\t' + messages
+            ,   '\t' + bottomSpace
+            ,   '\t' + horisontalBorder
+            ].join('\n')
     }
 
     // =====================================
@@ -191,6 +238,7 @@
         ,   parseStyles: _parseStyles
         ,   divider: _divider
         ,   callout: _callout
+        ,   box: _box
         }
 
     var defaults = {
