@@ -406,6 +406,31 @@ log.utils.callout('message', '|') // useful for emphasize
     | message
     | 
 
+#### `.box(text[, symbol, padding])`
+
+Create an ASCII box, support optional symbol and padding arguments
+
+```js
+log.utils.box('message')
+```
+
+    *************
+    *           *
+    *  message  *
+    *           *
+    *************
+
+```js
+log.utils.box('multiline\nmessage', '#', { left: 3, right: 3 })
+```
+
+    #################
+    #               #
+    #   multiline   #
+    #   message     #
+    #               #
+    #################
+
 - - - - - - -
 
 ## Advanced Usage

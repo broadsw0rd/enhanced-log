@@ -1,8 +1,6 @@
 {
     "asi": true,
     "laxcomma": true,
-    "laxbreak": true,
-    "shadow": true,
     "proto": true,
     "validthis": true
 }
