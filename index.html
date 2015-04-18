@@ -1,7 +1,6 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
     <title>Enhanced Log :: Home</title>
 
@@ -12,28 +11,26 @@
   </head>
 
   <body>
-    <nav class="navbar black">
-      <div class="container-fluid">
-        <div class="navbar-header">       
-          <a class="navbar-brand yellow" href="http://broadsw0rd.github.io/enhanced-log/">Enhanced Log</a>
-        </div>
-
-        <div>        
-          <ul class="nav navbar-nav navbar-right yellow">
-            <li><a href="http://broadsw0rd.github.io/enhanced-log/tests.html"><i class="fa fa-check"></i> Tests</a></li>
-            <li><a href="http://broadsw0rd.github.io/enhanced-log/dist/log.min.js"><i class="fa fa-download"></i> Download</a></li>
-            <li><a href="https://github.com/broadsw0rd/enhanced-log/"><i class="fa fa-github"></i> Source</a></li>
-          </ul>
-        </div>
+    <div class="main">
+      <div class="jumbotron">
+        <h1 class="text-center">Enhanced Log</h1>
+        <p class="text-center">Make your <code>console.log</code> sexy!</p>
+        <p class="text-center text-muted">Open DevTools to see it in action</p>
+      </div>
+    </div>
+    <nav>
+      <div class="nav-bar">
+        <a href="http://broadsw0rd.github.io/enhanced-log/tests.html" class="btn" title="Tests">
+          <i class="fa fa-check"></i>
+        </a><!-- 
+     --><a href="http://broadsw0rd.github.io/enhanced-log/dist/log.min.js" class="btn" title="Download">
+          <i class="fa fa-download"></i>
+        </a><!-- 
+     --><a href="https://github.com/broadsw0rd/enhanced-log/" class="btn" title="Source">
+          <i class="fa fa-github"></i>
+        </a>
       </div>
     </nav>
-    <div class="container">
-      <header class="jumbotron">
-        <h1 class="text-center">Enhanced Log</h1>
-        <p class="text-center">Make your <code>console.log</code> more sexy</p>
-        <p class="text-center text-muted">Open DevTools to see it in action</p>
-      </header>
-    </div>
     <script src="src/log.js"></script>
     <script src="src/demo.js"></script>
   </body>
