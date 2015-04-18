@@ -1,31 +1,71 @@
 body {
     font-family: 'Roboto';
-    font-size: 16px;
 }
 
-.navbar {
-    border: none;
-    border-radius: 0px;
+.main{
+    min-height: 500px;
+    background-color: #4CAF50;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border-top: 20px solid #388E3C;
 }
 
-.navbar.black {
-    background-color: #212121;
+.main .jumbotron{
+    background-color: #4CAF50;
+    padding-top: 100px;
+    margin: 0;
 }
 
-.navbar.black .navbar-brand.yellow {
-    color: #FFEB3B;
+.main h1{
+    color: #FFFFFF;
+    font-size: 80px;
 }
 
-.navbar.black .nav.yellow a {
-    color: #FFEB3B;
+.main p {
+    font-size: 30px;
+    color: #FFFFFF;
 }
 
-.navbar.black .nav.yellow a:focus{
-	background-color: #212121;
+.main p.text-muted {
+    color: #C8E6C9;
 }
 
-.navbar.black .nav.yellow a:hover,
-.navbar.black .nav.yellow a:active {
-    background-color: #FFEB3B;
-    color: #212121;
+.main code{
+    color: #4CAF50;
 }
+
+nav{
+    position: relative;
+}
+
+nav .nav-bar{
+    position: absolute;
+    display: block;
+    top: -50px;
+    width: 340px;
+    left: 50%;
+    margin-left: -170px; 
+}
+
+nav .nav-bar .btn{
+    background-color: #448AFF;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.23),0 3px 10px rgba(0,0,0,0.16);
+    color: #fff;
+    border-radius: 100%;
+    font-size: 60px;
+    line-height: 100px;
+    height: 100px;
+    width: 100px;
+    padding: 20px;
+    -webkit-transition: background-color 100ms linear;
+    transition: background-color 100ms linear;
+    margin-right: 20px; 
+}
+
+nav .nav-bar .btn:last-child{
+    margin-right: 0;
+}
+
+nav .nav-bar .btn:hover{
+    background-color: #03A9F4;
+}
+
