@@ -22,6 +22,7 @@ let defaults = [
     ,   'logo'
     ,   'divider'
     ,   'callout'
+    ,   'box'
     ]
 
 beforeEach(() => {
@@ -90,9 +91,9 @@ describe('log', () => {
             expect(console.log.getCall(0).args[0]).to.be('%cmessage')
             expect(console.log.getCall(0).args[1]).to.be(log.large.danger.capitalize.toString())
 
-            log.divider.callout('message')
-            expect(console.log.getCall(1).args[0]).to.be('%c' + log.divider.callout.mapper('message'))
-            expect(console.log.getCall(1).args[1]).to.be(log.divider.callout.toString())
+            log.divider.box.callout('message')
+            expect(console.log.getCall(1).args[0]).to.be('%c' + log.divider.box.callout.mapper('message'))
+            expect(console.log.getCall(1).args[1]).to.be(log.divider.box.callout.toString())
 
             log.divider.info('message')
             expect(console.log.getCall(2).args[0]).to.be('%c' + log.divider.info.mapper('message'))

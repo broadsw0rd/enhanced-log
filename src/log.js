@@ -111,7 +111,7 @@ return function scope(global, Object, Array, prototype, __proto__){
             length = text
             text = null
         }
-        if(/^\W+$/.test(text)){
+        if(/^\W$/.test(text)){
             if(typeof symbol == 'number'){
                 length = symbol
             }
