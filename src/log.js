@@ -362,6 +362,10 @@ return function scope(global, Object, Array, prototype, __proto__){
         ,   callout: {
                 mapper: _callout
             }
+
+        ,   box: {
+                mapper: _box
+            }
         }
 
     function mixin(target){
