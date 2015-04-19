@@ -273,22 +273,22 @@ return function scope(global, Object, Array, prototype, __proto__){
 
         ,   info: { 
                 styles: { 
-                    'color' : '#03a9f4' 
+                    'color' : '#2196F3' 
                 } 
             }
         ,   success: { 
                 styles: { 
-                    'color' : '#259b24' 
+                    'color' : '#4CAF50' 
                 } 
             }
         ,   warning: { 
                 styles: { 
-                    'color' : '#ff9800' 
+                    'color' : '#FF9800' 
                 } 
             }
         ,   danger: { 
                 styles: { 
-                    'color' : '#e51c23' 
+                    'color' : '#F44336' 
                 } 
             } 
 
