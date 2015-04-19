@@ -6,7 +6,20 @@
 /_____/_/ /_/_/ /_/\__,_/_/ /_/\___/\___/\__,_/  /_____/\____/\__, /  
                                                              /____/   
 */
-;(function (global, Object, Array, prototype, __proto__){
+;(function umd(name, root, factory){
+    /* istanbul ignore next */
+    if (typeof module !== 'undefined' && module.exports) { 
+        module.exports = factory() 
+    }
+    else if (typeof define === 'function' && define.amd) { 
+        define(factory) 
+    }
+    else { 
+        root[name] = factory() 
+    }
+}('log', this, function factory(){
+
+return function scope(global, Object, Array, prototype, __proto__){
 
     // =====================================
     // Private interface
@@ -394,14 +407,8 @@
     // Export
     // =====================================
 
-    if (typeof define == 'function' && define.amd) {
-        define(function() { return LogFactory() })
-    } 
-    else if (typeof module != 'undefined' && module.exports) {
-        module.exports = LogFactory()
-    } 
-    else {
-        global.log = LogFactory()
-    }
+    return LogFactory()
 
-}(this, Object, Array, 'prototype', '__proto__'))
+}(this, Object, Array, 'prototype', '__proto__')
+
+}))
