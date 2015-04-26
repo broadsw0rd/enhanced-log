@@ -18,7 +18,7 @@
   * [Usage](#usage)
   * [API](#api)
     * [log.`<style>[.<style>...](message)`](#logstylestylemessage)
-      * [Few words about `callout` and `divider`](#few-words-about-callout-and-divider)
+      * [Few words about `callout`, `divider` and `box`](#few-words-about-callout-divider-and-box)
     * [log.`styles`](#logstyles)
     * [log.`mapper(message)`](#logmappermessage)
     * [log.`api`](#logapi)
