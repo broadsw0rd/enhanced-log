@@ -275,6 +275,8 @@ Serialize log instance
 
 ### log.`off()`
 
+**DEPRECATED**
+
 Prevent **each** instance of `log` from output to console, works globally:
 
 ```js
@@ -287,9 +289,13 @@ log.info('message') // nothing happens
 
 ### log.`on()`
 
+**DEPRECATED**
+
 Resume output to console for **each** instance of `log`, works globally too
 
 ### log.`toggle([state])`
+
+**DEPRECATED**
 
 Toggle output to console, if `state` defined, `true` value will enable output, `false` - disable
 
