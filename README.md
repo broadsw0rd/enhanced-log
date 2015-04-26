@@ -10,14 +10,39 @@
 
 - - - - - - -
 
+## Table of Contents
+
+* [Enhanced Log](#enhanced-log)
+  * [Table of Contents](#table-of-contents)
+  * [Install](#install)
+  * [Usage](#usage)
+  * [API](#api)
+    * [log.`<style>[.<style>...](message)`](#logstylestylemessage)
+      * [Few words about `callout`, `divider` and `box`](#few-words-about-callout-divider-and-box)
+    * [log.`styles`](#logstyles)
+    * [log.`mapper(message)`](#logmappermessage)
+    * [log.`api`](#logapi)
+    * [log.`method`](#logmethod)
+    * [log.`toString()`](#logtostring)
+    * [log.`toJSON()`](#logtojson)
+    * [log.`off()`](#logoff)
+    * [log.`on()`](#logon)
+    * [log.`toggle([state])`](#logtogglestate)
+    * [log.`defaults`](#logdefaults)
+    * [log.`mixin(target)`](#logmixintarget)
+    * [log.`utils`](#logutils)
+  * [Advanced Usage](#advanced-usage)
+    * [Create your own logger](#create-your-own-logger)
+    * [Taking advantage of the fact that `log` is function](#taking-advantage-of-the-fact-that-log-is-function)
+
 ## Install
 
 ```
-$ npm install --save enhanced-log
+$ npm install enhanced-log
 ```
 
 ```
-$ bower install --save enhanced-log
+$ bower install enhanced-log
 ```
 
 Or just download [dev](http://broadsw0rd.github.io/enhanced-log/src/log.js) or [prod](http://broadsw0rd.github.io/enhanced-log/dist/log.min.js) version
@@ -250,6 +275,8 @@ Serialize log instance
 
 ### log.`off()`
 
+**DEPRECATED**
+
 Prevent **each** instance of `log` from output to console, works globally:
 
 ```js
@@ -262,9 +289,13 @@ log.info('message') // nothing happens
 
 ### log.`on()`
 
+**DEPRECATED**
+
 Resume output to console for **each** instance of `log`, works globally too
 
 ### log.`toggle([state])`
+
+**DEPRECATED**
 
 Toggle output to console, if `state` defined, `true` value will enable output, `false` - disable
 

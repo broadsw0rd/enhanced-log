@@ -128,25 +128,25 @@ log.muted(defaultDivider)
 
 // -------------------------------------
 
-logPre('%clog%c.info.divider(%c"ACSII divider"%c)', [log.natives, log, log.string, log])
+logPre('%clog%c.info.divider(%c"ASCII divider"%c)', [log.natives, log, log.string, log])
 
-log.info.divider('ACSII divider')
-
-log.muted(defaultDivider)
-
-// -------------------------------------
-
-logPre('%clog%c.warning.callout(%c"ACSII callout"%c)', [log.natives, log, log.string, log])
-
-log.warning.callout('ACSII callout')
+log.info.divider('ASCII divider')
 
 log.muted(defaultDivider)
 
 // -------------------------------------
 
-logPre('%clog%c.danger.box(%c"ACSII box"%c)', [log.natives, log, log.string, log])
+logPre('%clog%c.warning.callout(%c"ASCII callout"%c)', [log.natives, log, log.string, log])
 
-log.danger.box('ACSII box')
+log.warning.callout('ASCII callout')
+
+log.muted(defaultDivider)
+
+// -------------------------------------
+
+logPre('%clog%c.danger.box(%c"ASCII box"%c)', [log.natives, log, log.string, log])
+
+log.danger.box('ASCII box')
 
 log.muted(defaultDivider)
 
