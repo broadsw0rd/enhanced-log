@@ -26,12 +26,18 @@ return function scope(global, Object, Array, prototype, __proto__){
     // =====================================
 
     var _map = Array[prototype].map
+    var _slice = Array[prototype].slice
 
     var enabled = true
 
-    function _log(message, logger){
+    function _log(args){
         if(enabled) {
-            logger.api[logger.method]('%c' + logger.mapper(message), _createStyles(_result(logger.styles)))
+            // this.api[this.method]('%c' + this.mapper(message), _createStyles(_result(this.styles)))
+
+            args[0] = '%c' + this.mapper(args[0])
+            args.splice(1, 0, _createStyles(_result(this.styles)))
+
+            this.api[this.method].apply(this.api, args)
         }
     }
 
@@ -65,7 +71,7 @@ return function scope(global, Object, Array, prototype, __proto__){
     }
 
     function _compose(){
-        var functions = Array.apply(null, arguments)
+        var functions = _slice.call(arguments)
         ,   count = functions.length - 1
 
         return function composed() {
@@ -220,16 +226,19 @@ return function scope(global, Object, Array, prototype, __proto__){
     function LogFactory(base){
         base = base || proto
 
-        function log(message){
+        function log(){
             'use strict';
+
+            var args = _slice.call(arguments)
+
             if(this == global || this == void 0 || this instanceof LogFactory){
-                _log(message, log)
+                _log.call(log, args)
             }
             else if(this instanceof log){
                 // TODO: correct work when call like constructor `new log()`
             }
             else {
-                _log(message, _inherit(log, this))
+                _log.call(_inherit(log, this), args)
             }
         }
 

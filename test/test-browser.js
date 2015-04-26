@@ -9506,12 +9506,18 @@ exports.install = function install(target, now, toFake) {
         // =====================================
 
         var _map = Array[prototype].map;
+        var _slice = Array[prototype].slice;
 
         var enabled = true;
 
-        function _log(message, logger) {
+        function _log(args) {
             if (enabled) {
-                logger.api[logger.method]('%c' + logger.mapper(message), _createStyles(_result(logger.styles)));
+                // this.api[this.method]('%c' + this.mapper(message), _createStyles(_result(this.styles)))
+
+                args[0] = '%c' + this.mapper(args[0]);
+                args.splice(1, 0, _createStyles(_result(this.styles)));
+
+                this.api[this.method].apply(this.api, args);
             }
         }
 
@@ -9545,7 +9551,7 @@ exports.install = function install(target, now, toFake) {
         }
 
         function _compose() {
-            var functions = Array.apply(null, arguments),
+            var functions = _slice.call(arguments),
                 count = functions.length - 1;
 
             return function composed() {
@@ -9684,12 +9690,15 @@ exports.install = function install(target, now, toFake) {
         function LogFactory(base) {
             base = base || proto;
 
-            function log(message) {
+            function log() {
                 'use strict';
+
+                var args = _slice.call(arguments);
+
                 if (this == global || this == void 0 || this instanceof LogFactory) {
-                    _log(message, log);
+                    _log.call(log, args);
                 } else if (this instanceof log) {} else {
-                    _log(message, _inherit(log, this));
+                    _log.call(_inherit(log, this), args);
                 }
             }
 
@@ -9982,6 +9991,37 @@ describe('log', function () {
         it('should correct override css properties', function () {
             expect(log.small.large.huge.toString()).to.be(log.huge.toString());
         });
+    });
+
+    it('should support multiple argments', function () {
+        log('multiple', 'arguments');
+        expect(console.log.getCall(0).args[0]).to.be('%cmultiple');
+        expect(console.log.getCall(0).args[1]).to.be('');
+        expect(console.log.getCall(0).args[2]).to.be('arguments');
+
+        log.info('multiple', 'arguments');
+        expect(console.log.getCall(1).args[0]).to.be('%cmultiple');
+        expect(console.log.getCall(1).args[1]).to.be(log.info.toString());
+        expect(console.log.getCall(0).args[2]).to.be('arguments');
+    });
+
+    it('should support native format specifiers', function () {
+        log('format %d', 14);
+        expect(console.log.getCall(0).args[0]).to.be('%cformat %d');
+        expect(console.log.getCall(0).args[1]).to.be('');
+        expect(console.log.getCall(0).args[2]).to.be(14);
+
+        log('format %d %s', 14, 'text');
+        expect(console.log.getCall(1).args[0]).to.be('%cformat %d %s');
+        expect(console.log.getCall(1).args[1]).to.be('');
+        expect(console.log.getCall(1).args[2]).to.be(14);
+        expect(console.log.getCall(1).args[3]).to.be('text');
+
+        log.info('format %d %s', 14, 'text');
+        expect(console.log.getCall(2).args[0]).to.be('%cformat %d %s');
+        expect(console.log.getCall(2).args[1]).to.be(log.info.toString());
+        expect(console.log.getCall(2).args[2]).to.be(14);
+        expect(console.log.getCall(2).args[3]).to.be('text');
     });
 
     describe('should correct work with custom context', function () {

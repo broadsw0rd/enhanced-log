@@ -105,6 +105,37 @@ describe('log', () => {
         })
     })
 
+    it('should support multiple argments', () => {
+        log('multiple', 'arguments')
+        expect(console.log.getCall(0).args[0]).to.be('%cmultiple')
+        expect(console.log.getCall(0).args[1]).to.be('')
+        expect(console.log.getCall(0).args[2]).to.be('arguments')
+
+        log.info('multiple', 'arguments')
+        expect(console.log.getCall(1).args[0]).to.be('%cmultiple')
+        expect(console.log.getCall(1).args[1]).to.be(log.info.toString())
+        expect(console.log.getCall(0).args[2]).to.be('arguments')
+    })
+
+    it('should support native format specifiers', () => {
+        log('format %d', 14);
+        expect(console.log.getCall(0).args[0]).to.be('%cformat %d')
+        expect(console.log.getCall(0).args[1]).to.be('')
+        expect(console.log.getCall(0).args[2]).to.be(14)
+
+        log('format %d %s', 14, 'text');
+        expect(console.log.getCall(1).args[0]).to.be('%cformat %d %s')
+        expect(console.log.getCall(1).args[1]).to.be('')
+        expect(console.log.getCall(1).args[2]).to.be(14)
+        expect(console.log.getCall(1).args[3]).to.be('text')
+
+        log.info('format %d %s', 14, 'text');
+        expect(console.log.getCall(2).args[0]).to.be('%cformat %d %s')
+        expect(console.log.getCall(2).args[1]).to.be(log.info.toString())
+        expect(console.log.getCall(2).args[2]).to.be(14)
+        expect(console.log.getCall(2).args[3]).to.be('text')
+    })
+
     describe('should correct work with custom context', () => {
         let customLogger = {
                 styles: {
