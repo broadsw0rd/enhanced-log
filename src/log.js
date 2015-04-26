@@ -353,18 +353,6 @@ return function scope(global, Object, Array, prototype, __proto__){
                 }
             }
 
-        // just logo
-        ,   logo: { 
-                styles:{
-                    'font-size':'46px'
-                ,   'font-family': 'Roboto, Helvetica, sans-serif'
-                ,   'color': '#FFEB3B'
-                ,   'padding':'20px'
-                ,   'line-height':'110px'
-                ,   'background-color':'#212121;'
-                }
-            }
-
         ,   divider: {
                 mapper: _divider
             }

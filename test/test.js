@@ -19,7 +19,6 @@ let defaults = [
     ,   'bold'
     ,   'italic'
     ,   'code'
-    ,   'logo'
     ,   'divider'
     ,   'callout'
     ,   'box'
