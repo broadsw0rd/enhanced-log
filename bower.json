@@ -11,9 +11,7 @@
     "/.*",
     "test",
     "libs",
-    "fonts",
-    "css",
-    "src/demo.js",
+    "site",
     "babelhook.js",
     "index.html",
     "tests.html"
