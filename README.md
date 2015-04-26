@@ -63,6 +63,8 @@ log.large.capitalize.info('message')
 console.log('%cmessage', 'color:#03a9f4;text-transform:capitalize;font-size:18px;')
 ```
 
+[Demo](http://broadsw0rd.github.io/enhanced-log/)
+
 - - - - - - -
 
 ## API
@@ -96,9 +98,9 @@ List of chainable styling methods:
 - `bold`
 - `italic`
 - `code`
-- `logo`
 - `divider`
 - `callout`
+- `box`
 
 This methods very similar to CSS classes: 
 
@@ -122,9 +124,9 @@ log.info.large // same styles as `log.large.info`
 log.small.large.huge // equal to log.huge
 ```
 
-#### Few words about `callout` and `divider`
+#### Few words about `callout`, `divider` and `box`
 
-These two methods are modify log string:
+These methods are modify log string:
 
 ```js
 log.divider('message') // useful for separating output
@@ -140,16 +142,30 @@ log.callout('message') // useful for emphasize
     ▌ message
     ▌ 
 
-Of course both methods are chainable
+```js
+log.box('message') // useful :)
+```
+
+    *************
+    *           *
+    *  message  *
+    *           *
+    *************
+
+Of course these methods are chainable
 
 ```js
-log.divider.callout('message')
+log.divider.box.callout('message')
 ```
 
     ▌
-    ▌ ==================== message ====================
+    ▌   *********************************************************
+    ▌   *                                                       *
+    ▌   *  ===================== message =====================  *
+    ▌   *                                                       *
+    ▌   *********************************************************
     ▌
-
+    
 ### log.`styles`
 
 Object or function of CSS properties for styling output

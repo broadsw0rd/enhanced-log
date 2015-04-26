@@ -9811,18 +9811,6 @@ exports.install = function install(target, now, toFake) {
                     'background-color': '#F9F2F4',
                     padding: '0 4px'
                 }
-            }
-
-            // just logo
-            , logo: {
-                styles: {
-                    'font-size': '46px',
-                    'font-family': 'Roboto, Helvetica, sans-serif',
-                    color: '#FFEB3B',
-                    padding: '20px',
-                    'line-height': '110px',
-                    'background-color': '#212121;'
-                }
             },
 
             divider: {
@@ -9911,7 +9899,7 @@ var _import3 = require('../src/log.js');
 
 var log = _import3;
 
-var defaults = ['large', 'huge', 'small', 'info', 'success', 'warning', 'danger', 'underline', 'overline', 'linethrough', 'capitalize', 'uppercase', 'lowercase', 'bold', 'italic', 'code', 'logo', 'divider', 'callout', 'box'];
+var defaults = ['large', 'huge', 'small', 'info', 'success', 'warning', 'danger', 'underline', 'overline', 'linethrough', 'capitalize', 'uppercase', 'lowercase', 'bold', 'italic', 'code', 'divider', 'callout', 'box'];
 
 beforeEach(function () {
     sinon.spy(console, 'log');
