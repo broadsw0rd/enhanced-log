@@ -1,4 +1,4 @@
-# Enhanced Log
+# Enhanced Log (Not maintained)
 
 >Amazing, flexible, extendable library for enhance [styling console output](https://developer.chrome.com/devtools/docs/console#styling-console-output-with-css)
 
